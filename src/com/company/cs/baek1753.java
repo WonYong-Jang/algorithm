@@ -8,7 +8,7 @@ import java.util.Scanner;
  * 1753	최단경로
  *
  */
-public class Solution {
+public class baek1753 {
 	public static int V, E;
 	public static ArrayList<ArrayList<Point>> arr = new ArrayList<ArrayList<Point>>(); // 인접리스트
 	public static int[] dist = new int[100];
