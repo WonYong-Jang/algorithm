@@ -20,18 +20,19 @@ public class baek1504 {
 			return o.cost - cost;
 		}
 	}
-	public static int N ,E, pointStart, pointEnd, pointMid1, pointMid2, result1, result2, totalResult;
+	public static final int INF = 800001; // 최대값 정할때 주의 !!! 
+	public static int N ,E, pointMid1, pointMid2, result,result2;
 	public static int[] dist = new int[801]; // 2 ~ 800
-	public static int[] direction1 = new int[4];
-	public static int[] direction2 = new int[4];
+	
 	public static ArrayList<ArrayList<Point>> arr = new ArrayList<ArrayList<Point>>(); 
 	public static void init() {
 		for(int i=1; i<= N; i++)
 		{
-			dist[i] = Integer.MAX_VALUE;
+			dist[i] = INF;
 		}
 	}
-	public static void dijkstra(int start) {
+	public static int dijkstra(int start, int end) {
+		int result =0;
 		PriorityQueue<Point> que = new PriorityQueue<Point>();
 		dist[start] = 0;
 		que.offer(new Point(start,0));
@@ -47,12 +48,15 @@ public class baek1504 {
 				}
 			}
 		}
+		result = dist[end];
+		init();
+		return result;
 	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Scanner scanner = new Scanner(System.in);
-		int start, end, cost, flag=0;
-		result1 = 0; result2=0; totalResult=0;
+		int start, end, cost;
+		result = 0; result2=0;
 		N = scanner.nextInt();
 		E = scanner.nextInt();
 		for(int i=0; i<=N; i++)
@@ -69,43 +73,14 @@ public class baek1504 {
 		}
 		pointMid1 = scanner.nextInt();
 		pointMid2 = scanner.nextInt();
-		direction1[0] = 1;
-		direction1[1] = pointMid1;
-		direction1[2] = pointMid2;
-		direction1[3] = N;
+		init();
+		result = dijkstra(1, pointMid1) + dijkstra(pointMid1, pointMid2) + dijkstra(pointMid2, N);
+		// INF 를 Integer.max_value 값으로 주었을때 int 의 최대값이 넘어가기 때문에 문제에 주어진 적절한 최대값을 넣어둘 것!!
+		result2 = dijkstra(1, pointMid2) + dijkstra(pointMid2, pointMid1) + dijkstra(pointMid1, N);
 		
-		direction2[0] = 1;
-		direction2[1] = pointMid2;
-		direction2[2] = pointMid1;
-		direction2[3] = N;
-		
-		for(int i=0; i<3; i++)
-		{
-			init();
-			dijkstra(direction1[i]);
-			if(dist[direction1[i+1]] == Integer.MAX_VALUE) 
-			{
-				flag =1;
-				break;
-			}
-			result1 += dist[direction1[i+1]];
-		}
-		
-		for(int i=0; i<3; i++)
-		{
-			init();
-			dijkstra(direction2[i]);
-			if(dist[direction2[i+1]] == Integer.MAX_VALUE) 
-			{
-				
-				flag =1;
-				break;
-			}
-			result2 += dist[direction2[i+1]];
-		}
-		totalResult = Integer.min(result1, result2);
-		if(flag == 0) System.out.println(result1);
-		else System.out.println(-1);
+		if(result >= INF && result2 >= INF) System.out.println(-1);
+		else if(result > result2) System.out.println(result2);
+		else System.out.println(result);
 	}
 }
 

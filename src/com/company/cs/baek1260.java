@@ -29,7 +29,6 @@ public class baek1260 {
 				dfs(i);
 			}
 		}
-		
 	}
 	public static void bfs(int v) {
 		Queue<Integer> que = new LinkedList<Integer>();
