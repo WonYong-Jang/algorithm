@@ -1,7 +1,5 @@
 package com.company.cs;
 
-
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
@@ -18,7 +16,7 @@ import java.util.Scanner;
 public class baek1260 {
 	
 	public static int V, E, start;
-	public static ArrayList<Integer>[] arr = new ArrayList[1002]; // 인접 리스트
+	
 	public static int[][] map = new int[1002][1002];
 	public static int[] visited = new int[1002];
 	public static void dfs(int v) {
@@ -63,9 +61,6 @@ public class baek1260 {
 		V = scanner.nextInt();
 		E = scanner.nextInt();
 		start = scanner.nextInt();
-		for(int i=1; i<= V; i++) {
-			arr[i] = new ArrayList<>();
-		}
 		
 		for(int i=0; i < E; i++) {
 			startP = scanner.nextInt();
