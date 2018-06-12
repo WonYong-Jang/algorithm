@@ -19,7 +19,7 @@ public class baek1260 {
 	
 	public static int[][] map = new int[1002][1002];
 	public static int[] visited = new int[1002];
-	public static void dfs(int v) {
+	public static void dfs(int v) { /////////////////////////// dfs
 		
 		if(visited[v] == 1 ) return; // base case / 방문했다면 리턴
 		visited[v] = 1;
@@ -30,7 +30,7 @@ public class baek1260 {
 			}
 		}
 	}
-	public static void bfs(int v) {
+	public static void bfs(int v) { /////////////////////// bfs
 		Queue<Integer> que = new LinkedList<Integer>();
 		que.add(v);
 		visited[v]=1;
