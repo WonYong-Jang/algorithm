@@ -5,13 +5,7 @@ import java.util.Queue;
 import java.util.Scanner;
 
 /**
-4 5 1 // 정점의 갯수, 간선의 갯수, 탐색을 시작할 정점의 번호  
-1 2
-1 3
-1 4
-2 4
-3 4
-    백준 dfs / bfs
+    백준 dfs / bfs 
  */
 public class baek1260 {
 	
@@ -41,7 +35,7 @@ public class baek1260 {
 			que.poll();
 			
 			for(int i= 1; i<= V ; i++) {
-				if(map[num][i] == 1 && visited[i] == 0) {
+				if(map[num][i] == 1 && visited[i] == 0) { // 인접 행렬 검사 및 방문 체크 
 					visited[i] = 1;
 					que.add(i);
 				}
