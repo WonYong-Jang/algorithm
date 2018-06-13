@@ -74,6 +74,3 @@ public class baek1260 {
 		bfs(start);
 	}
 }
-
-
-
