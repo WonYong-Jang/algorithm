@@ -26,7 +26,7 @@ public class swExpert2115 {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 		K = Integer.parseInt(br.readLine());
-		for (int k = 1; k <= K; k++) 
+		for (int m = 1; m <= K; m++) 
 		{
 			st = new StringTokenizer(br.readLine());
 			N = Integer.parseInt(st.nextToken());
@@ -39,46 +39,50 @@ public class swExpert2115 {
 					map[i][j] = Integer.parseInt(st.nextToken());
 				}
 			}
-			for (int i = 1; i <= N; i++) 
+		
+			for(int i=1; i<= N; i++)
 			{
-				for(int j=1; j<= N; j++)
+				for(int j=1; j<= N-M+1; j++)
 				{
-					if(visited[i][j] != 0 ) continue;
+					if(visited[i][j] != 0) continue;
 					visited[i][j] = 1;
-					que.addLast(new Point(i,j));
-					dfs(i,j,1,1);
-					visited[i][j] = 0;
-					que.pollLast();
+					dfs(i,j,1);
+					for(int k=1; k<= N; k++)
+					{
+						for(int l=1; l<=N-M+1; l++)
+						{
+							if(visited[k][l] != 0) continue;
+							visited[k][l] = 1;
+							dfs(k,l,1);
+							visited[k][l] = 0;
+						}
+					}
 					
+					visited[i][j] = 0;
 				}
 			}
 		}
 	}
 
-	public static void dfs(int dx,int dy, int depth, int cnt) {
-		int nextCnt = cnt;
-		if(depth == M && nextCnt == 2 ) {
-			arr2.clear();
-			arr2.addAll(que);
-			
-			System.out.println(arr1.size()+" "+arr2.size());
+	public static void dfs(int dx,int dy, int depth) {
+		if(depth == M) {
+			for(int k=1; k<= N; k++)
+			{
+				for(int l=1; l<=N; l++)
+				{
+					System.out.print(visited[k][l]+" ");
+				}
+				System.out.println();
+			}
 			return;
 		}
-		else if(depth == M && nextCnt == 1) {
-			depth=0;
-			nextCnt++;
-			arr1.clear();
-			arr1.addAll(que);
-		}
-		System.out.println(dx+" "+dy+" "+depth+" "+cnt);
-		for(int i=1; i<= N; i++)
+		
+		for(int i=dy+1; i<= N; i++)
 		{
-			if(visited[dx][i] != 0) continue;
+			if(visited[dx][i] != 0) break;
 			visited[dx][i] = 1;
-			que.addLast(new Point(dx,i));
-			dfs(dx,i,depth+1,nextCnt);
+			dfs(dx,i,depth+1);
 			visited[dx][i] = 0;
-			que.pollLast();
 		}
 	}
 	public static class Point{
