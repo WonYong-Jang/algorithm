@@ -2,6 +2,7 @@ package com.company.etc;
 /**
  * 부분집합 구하기 (비트 연산자이용) 
  * 중요 : 1 << N   ===> 2^n    따라서 부분집합의 전체 갯수  
+ * issue 에 정리 해 놓은 글 같이 보기  
  */
 public class Subset {
 	
