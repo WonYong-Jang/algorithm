@@ -14,8 +14,6 @@ public class Shift {
 		System.out.println("왼쪽으로 2칸 쉬프트 : "+ number);// 8 출력  
 		
 		number = number >> 1; // 0000 0100
-		System.out.println("오른쪽으로 1칸 쉬프트 : "+ number);// 4출력  
-		
+		System.out.println("오른쪽으로 1칸 쉬프트 : "+ number);// 4출력  	
 	}
-
 }
