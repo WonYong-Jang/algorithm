@@ -1,5 +1,7 @@
 package com.company.etc;
-
+/**
+ * 쉬프트 연산자 기본 개념 연습  // 달이 차오른다 가자 문제 까지 풀기 ! 
+ */
 public class Shift {
 
 	public static void main(String[] args) {
