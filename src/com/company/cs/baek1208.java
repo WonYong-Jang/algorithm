@@ -37,8 +37,8 @@ public class baek1208 {
 		
 		System.out.println(cnt);
 	}
-	public static void subSet(ArrayList<Integer> arr) {
-		int len = arr.size(), sum=0;
+	public static void subSet(ArrayList<Integer> arr, int len) {
+		int sum=0;
 		for(int i=1; i< (1<<len); i++)
 		{
 			sum =0;
