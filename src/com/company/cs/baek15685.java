@@ -10,16 +10,15 @@ public class baek15685 {
 	
 	// 방향 ==> 0 : 오른쪽  / 1 : 위쪽 / 2 : 왼쪽 / 3 : 아래  
 	public static int N; // 드래곤 커브의 갯수 
-	public static final int maxIdx = 100;
-	public static int[][] curveMap = new int[101][101]; 
-	public static int[][] inputMap = new int[21][4];
-	public static int startX, startY;
+	public static final int maxIdx = 100; // 최대 인덱스  
+	public static int[][] curveMap = new int[101][101]; // 드래곤 커브 그릴 배열  
+	public static int[][] inputMap = new int[21][4]; // input 받아올 배열   
+	public static int startX, startY; // 시작점   
 	public static int[] dxArr = {0,0,1,1}, dyArr= {0,1,0,1}; // 4 꼭지점 구하기 위한 방향 배열 
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		int dx, dy, d, g;
 		
 		N = Integer.parseInt(st.nextToken());
 		for(int i=0; i< N; i++)
@@ -30,12 +29,14 @@ public class baek15685 {
 				inputMap[i][j] = Integer.parseInt(st.nextToken());
 			}
 		}
+		
 		for(int i=0; i< N; i++) // input 값들을 행 단위로 그리기  (커브 )  
 		{
 			drawCurve(i);
 		}
 		int rDx=0, rDy=0, result=0, cnt=0;
-		for(int i=0; i< maxIdx ;i++)
+		// 드래곤 커브 다 그린 후 4방향 꼭지점 확인 하기  
+		for(int i=0; i< maxIdx ;i++) // 0 ~ 99 인덱스 까지만 검사  
 		{
 			for(int j=0; j< maxIdx; j++)
 			{
@@ -80,7 +81,7 @@ public class baek15685 {
 		int result =0;
 		switch(dir)
 		{
-		case 0:result=1;break;
+		case 0:result=1;break; // 오른쪽방향일땐 그 다음 위쪽 방향   
 		case 1:result=2;break;
 		case 2:result=3;break;
 		case 3:result=0;break;
