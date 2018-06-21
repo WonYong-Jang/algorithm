@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
 
 /**
  * 부분집합의 합 2   
- * 2^40 은 약 1조에 가깝기 때문에 절반으로 나눠서 계산  
+ * 2^40 은 약 1조에 가깝기 때문에 절반으로 나눠서 계산  !( 미완성 )  
  */
 public class baek1208 {
 
