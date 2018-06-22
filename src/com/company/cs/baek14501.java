@@ -35,18 +35,14 @@ public class baek14501 {
 	}
 	public static void dfs(int date, int sum)
 	{	
-		System.out.println(date+" "+sum);
 		
 		maxValue = Integer.max(maxValue, sum);	
-		
 		int nextDate = date + map[date][DATE]; // 다음 일정으로  
 		
 		for(int i = nextDate ; i<= N; i++)
 		{
 			if(i+ map[i][DATE] -1 > N ) continue; // 일정이 넘어가게 되면 continue
 			dfs(i, map[i][MONEY]+sum);
-		}
-		
+		}	
 	}
-
 }
