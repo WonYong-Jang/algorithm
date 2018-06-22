@@ -12,7 +12,7 @@ public class baek14501 {
 	
 	public static int N; // 전체 일수   
 	public static int[][] map = new int[16][3];
-	public static final int DATE=1, MONEY = 2;
+	public static final int DATE=1, MONEY = 2; // 날짜와 수당  
 	public static int maxValue = 0; // 최대값 초기화    
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		// TODO Auto-generated method stub
