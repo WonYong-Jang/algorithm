@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 /*
- * 벌꿀 채취   
+ * 벌꿀 채취  (모의 테스트 )  
  */
 public class swExpert2115 {
 	
