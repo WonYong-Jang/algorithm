@@ -8,65 +8,54 @@ import java.util.StringTokenizer;
 
 public class baek14888 {
 
-	public static int maxValue = Integer.MIN_VALUE, minValue = Integer.MAX_VALUE;
-	public static int N;
-	public static ArrayList<Integer> num = new ArrayList<>();
-	public static int[] map = new int[4];
+	static int N, minValue = Integer.MAX_VALUE, maxValue = Integer.MIN_VALUE;
+	static ArrayList<Integer> arr = new ArrayList<>();
+	static int[] opCnt = new int[4];
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 		N = Integer.parseInt(br.readLine());
 		st = new StringTokenizer(br.readLine());
-		for(int i=0; i< N; i++)
-			num.add(Integer.parseInt(st.nextToken()));
+		for(int i=0; i<N; i++)
+			arr.add(Integer.parseInt(st.nextToken()));
 		st = new StringTokenizer(br.readLine());
 		for(int i=0; i<4; i++)
-			map[i] = Integer.parseInt(st.nextToken());
-		
+			opCnt[i] = Integer.parseInt(st.nextToken());
 		for(int i=0; i<4; i++)
 		{
-			if(map[i]==0) continue;
-			map[i]--;
-			dfs(num.get(0), 0, i);
-			map[i]++;
+			if(opCnt[i] == 0 ) continue;
+			opCnt[i]--;
+			dfs(0,i, arr.get(0));
+			opCnt[i]++;
 		}
 		System.out.println(maxValue);
 		System.out.println(minValue);
 	}
-	public static void dfs(int sum, int cnt, int op) 
+	public static void dfs(int cnt ,int op, int sum)
 	{
-		int rSum = sum, nextCnt = cnt;
-		nextCnt++;
-		switch(op) 
+		int rSum = sum;
+		int nextCnt = cnt+1;
+		switch(op)
 		{
-		case 0:rSum+=num.get(nextCnt); break;
-		case 1:rSum-=num.get(nextCnt); break;
-		case 2:rSum*=num.get(nextCnt); break;
-		case 3:rSum/=num.get(nextCnt); break;
+		case 0: rSum += arr.get(nextCnt); break;
+		case 1: rSum -= arr.get(nextCnt); break;
+		case 2: rSum *= arr.get(nextCnt); break;
+		case 3: rSum /= arr.get(nextCnt); break;
 		}
 		
 		if(nextCnt == N-1) {
-			maxValue = Integer.max(maxValue, rSum);
 			minValue = Integer.min(minValue, rSum);
+			maxValue = Integer.max(maxValue, rSum);
+			return;
 		}
+		
 		for(int i=0; i<4; i++)
 		{
-			if(map[i]==0) continue;
-			map[i]--;
-			dfs(rSum, nextCnt, i);
-			map[i]++;
+			if(opCnt[i] == 0 ) continue;
+			opCnt[i]--;
+			dfs(nextCnt,i, rSum);
+			opCnt[i]++;
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
