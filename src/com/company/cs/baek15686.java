@@ -6,23 +6,17 @@ import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.StringTokenizer;
-
 /**
- * 치킨 배달  
- *
+ * 치킨 배달   
  */
 public class baek15686 {
-	
-	public static Deque<Point> deque = new ArrayDeque<>();
-	public static ArrayList<Point> totalChicken = new ArrayList<>(); 
-	public static int[] visited = new int[14];
-	public static ArrayList<Point> home = new ArrayList<>();
-	public static int[][] map = new int[51][51];
-	public static int N, M;
-	public static int minValue = Integer.MAX_VALUE;
+
+	static int[][] map = new int[51][51];
+	static Deque<Point> que = new ArrayDeque<>(); // 최대 M개의 치킨집 선택을 위한 큐  
+	static int N, M, minDis = Integer.MAX_VALUE, cLen, hLen; // 치킨, 집 배열 size
+	static ArrayList<Point> chicken = new ArrayList<>();
+	static ArrayList<Point> home = new ArrayList<>();
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -34,62 +28,64 @@ public class baek15686 {
 			st = new StringTokenizer(br.readLine());
 			for(int j=1; j<= N; j++)
 			{
-				int num = Integer.parseInt(st.nextToken());
-				map[i][j] = num;
-				if(num == 2) totalChicken.add(new Point(i,j));
-				else if(num ==1) home.add(new Point(i,j)); 
+				int temp = Integer.parseInt(st.nextToken());
+				map[i][j] = temp;
+				if(temp == 1) home.add(new Point(i,j));
+				else if(temp == 2) chicken.add(new Point(i,j));
 			}
 		}
-		for(int i=0; i<totalChicken.size(); i++) {
-			visited[i] = 1;
-			deque.add(totalChicken.get(i));
-			dfs(1, i);
-			visited[i] = 0;
-			deque.pollLast();
-		}
-		System.out.println(minValue);
-	}
-	public static int bfs(Point home) {
-		Queue<Point> que = new LinkedList<>();
-		que.addAll(deque);
-		int result = Integer.MAX_VALUE;
-		while(!que.isEmpty()) {
-			Point chicken = que.poll();
-			
-			int temp = calDistance(chicken, home);
-			result = Integer.min(temp,result);
-		}
+		cLen = chicken.size(); // 치킨집 갯수(2) 
+		hLen = home.size(); // 집 갯수 (1)
 		
-		return result;
+		for(int i=0; i<cLen; i++)
+		{
+			que.addLast(chicken.get(i));
+			dfs(i, 1);
+			que.pollLast();
+		}
+		System.out.println(minDis);
 	}
-	public static void dfs(int cnt, int v) {
+	public static void dfs(int curIndex, int cnt)
+	{	
 		if(cnt == M) {
-			int result =0;
-			for(Point point : home)
-			{
-				result += bfs(point);
-			}
-			minValue = Integer.min(minValue, result);
+			int temp = calculate(); // 계산  
+			minDis = Integer.min(minDis, temp);
 			return;
 		}
-		for(int i=v; i<totalChicken.size(); i++) {
-			if(visited[i] == 1) continue;
-			deque.add(totalChicken.get(i));
-			visited[i] = 1;
-			dfs(cnt+1, i);
-			visited[i] = 0;
-			deque.pollLast();
+		for(int i=curIndex+1; i<cLen; i++)
+		{
+			que.addLast(chicken.get(i));
+			dfs(i, cnt+1);
+			que.pollLast();
 		}
 	}
-	public static int calDistance(Point a, Point b) 
+	public static int calculate() // 집 기준으로 선택된 치킨집(deque)과의 거리를 구함 
 	{
-		int result = Math.abs(a.dx - b.dx) + Math.abs(a.dy - b.dy); 
-		return result;
+		ArrayList<Point> arr = new ArrayList<>();
+		arr.addAll(que); // 선택된 치킨 집 
+		int min, sum=0;
+		for(int i=0; i<hLen; i++) // 집의 갯수만큼  
+		{
+			min = Integer.MAX_VALUE;
+			for(int j=0; j<arr.size(); j++) // 선택된 치킨집  
+			{
+				int result = dis(arr.get(j),home.get(i));
+				if( result < min) {
+					min = result;
+				}
+			}
+			sum += min; // 집에서 가장 가까운 치킨 집을 찾아내서 더함 
+		}
+		return sum;
 	}
-	public static class Point {
+	public static int dis(Point p1, Point p2) // 거리 계산  
+	{
+		return Math.abs(p1.dx - p2.dx) + Math.abs(p1.dy - p2.dy);
+	}
+	public static class Point{
 		int dx,dy;
-		Point(int x,int y) {
-			dx =x; dy =y;
+		Point(int x, int y) {
+			dx = x; dy =y;
 		}
 	}
 }
