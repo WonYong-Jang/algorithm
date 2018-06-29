@@ -6,6 +6,10 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+/**
+ * 연산자 끼워넣기   
+ *
+ */
 public class baek14888 {
 
 	static int N, minValue = Integer.MAX_VALUE, maxValue = Integer.MIN_VALUE;
