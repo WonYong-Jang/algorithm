@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
-
 /**
  * 점심 식사 시간  
  *
@@ -35,7 +34,7 @@ public class swExpert2383 {
 				{
 					temp = Integer.parseInt(st.nextToken());
 					map[i][j] = temp;
-					if(temp == 1) person.add(new Person(i,j,0,0));
+					if(temp == 1) person.add(new Person(i, j, 0, 0, 0));
 					else if(temp >= 2) node.add(new Node(i,j));
 				}
 			}
@@ -47,7 +46,7 @@ public class swExpert2383 {
 					dfs(i,j);
 				}
 			}
-			System.out.println(result);
+			System.out.println("#"+k+" "+ result);
 		}
 	}
 	public static void dfs(int index, int target) { // 해당 사람이 1, 2 계단중 선택  
@@ -69,39 +68,42 @@ public class swExpert2383 {
 	public static void solve() 
 	{
 		Queue<Person> que = new LinkedList<>();
+		int[] stairs = new int[2]; // 1, 2 번 계단 
 		que.addAll(person);
 		int curMin =0;
-		int[] stairs = new int[2]; // 1번 2번 계단 중 하나  
-		System.out.println("start ! ");
+		//System.out.println(">>>>>>>>>>>>>>>>>>>>>");
 		while(!que.isEmpty()) 
 		{
 			Person p = que.poll();
-			int curDis = p.curDis;
+			int curDis = p.curDis; // 계단 입구까지 남은 거리
 			int curFloor = p.curFloor;
 			int target = p.target; //1, 2 번 계단 중 하나   
 			int targetDis = p.targetDis;
-			int targetFloor = map[node.get(target).dx][node.get(target).dy];
-			System.out.println(curDis+" "+targetDis+" "+curFloor+" "+target+" // ("+p.dx+" "+p.dy+") ");
+			int targetFloor = map[node.get(target).dx][node.get(target).dy]; // 계단 층수 
+			int flag = p.flag; // 1 : 계단 입구 도착 , 2 : 계단 내려가는 중 ! 
 			curMin = Math.max(curMin, curDis);
-			if(target == -1) continue; // 무사히 계단을 빠져 나간 경우  
-			
-			if(curDis < targetDis) { // 계단 입구 까지 도착 하지 않은 경우  
-				que.add(new Person(p.dx,p.dy,curDis+1, curFloor, targetDis, target));
-			}
-			else if(curDis >= target && curFloor < targetFloor) // 계단 입구 까지 도착 한경우 ==> 내려가고 있거나 대기 중이거나
+			//System.out.println(curDis+" "+curFloor+" "+flag);
+			if(flag ==2 ) // 계단 을 내려가고 있는 중 ! 
 			{
-				if(stairs[target] <= 3) { // 내려 갈수 있는 경우 
-					stairs[target]++;
-					que.add(new Person(p.dx,p.dy,curDis+1, curFloor+1, targetDis, target));
+				if(curFloor <= targetFloor) que.add(new Person(p.dx, p.dy, curDis+1, curFloor+1, targetFloor, target,flag));
+				else stairs[target]--;
+			}
+			else if(flag == 1) // 계단 입구 도착 !  
+			{
+				if(stairs[target] < 3) { // 내려 갈수 있는 상태 
+					que.add(new Person(p.dx, p.dy, curDis+1, 2, targetFloor, target, 2));
 				}
-				else { // 대기 해야 하는 경우 
-					que.add(new Person(p.dx,p.dy,curDis+1, curFloor, targetDis, target));
+				else { // 3명이 모두 차있는 상태  
+					que.add(new Person(p.dx, p.dy, curDis+1, 1, targetFloor, target, flag));
 				}
 			}
-			else if(curDis >= target && curFloor == targetFloor) // 계단 도착 한 경우
-			{
-				que.add(new Person(p.dx,p.dy,curDis+1, curFloor, targetDis, -1));
-				stairs[target]--;
+			else {
+				if(curDis < targetDis) {
+					que.add(new Person(p.dx, p.dy, curDis+1, 0, targetDis, target, flag));
+				}
+				else {
+					que.add(new Person(p.dx, p.dy, curDis+1, 0, targetDis, target, 1));
+				}
 			}
 		}
 		result = Math.min(result, curMin);
@@ -118,16 +120,16 @@ public class swExpert2383 {
 		person.clear();
 		node.clear();
 	}
-	static class Person {
-		int dx, dy, curDis, curFloor, targetDis, target; // 목표계단입구까지 거리, 계단 내려가고 있을때 현재 층 수
-		Person(int a, int b, int c, int d) {
-			dx =a; dy =b; curDis =c; curFloor =d;
+	static class Person { // 사람 
+		int dx, dy, curDis,curFloor, targetDis, target, flag; // 목표계단입구까지 거리, 계단 내려가고 있을때 현재 층 수 
+		Person(int a, int b, int c, int d, int e) {
+			dx =a; dy =b; curDis =c; curFloor=d; flag =e;
 		}
-		Person(int a, int b, int c, int d, int e, int f) {
-			dx =a; dy =b; curDis =c; curFloor =d; targetDis=e; target=f;
+		Person(int a, int b, int c, int d, int e, int f,int g) {
+			dx =a; dy =b; curDis =c; curFloor=d; targetDis=e; target=f; flag=g;
 		}
 	}
-	static class Node {
+	static class Node { // 계단  
 		int dx, dy;
 		Node(int x, int y) {
 			dx=x; dy=y;
