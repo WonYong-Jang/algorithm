@@ -5,16 +5,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.Vector;
 /**
- * 에디터  (링크드 리스트 집접 구현해 보기 !!!, )
+ * 에디터  (링크드 리스트도 집접 구현해 보기 !!!, )
  */
 public class baek1406 {
 	
 	static LinkedList<Character> vec = new LinkedList<>();
+	static Stack<Character> left = new Stack<>();
+	static Stack<Character> right = new Stack<>();
 	static char[][] cmdArr = new char[500001][2];
-	static int len, cursor, cmd; // 문자 길이 ,  커서 , 명령  
+	static int len, cmd; // 문자 길이 ,  커서 , 명령  
 	static String str;
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
@@ -23,8 +26,11 @@ public class baek1406 {
 		StringBuilder sb = new StringBuilder();
 		str = br.readLine();
 		len = str.length();
-		setting();
-		cursor = len;
+		for(int i=0; i<len; i++) // input 
+		{
+			left.push(str.charAt(i));
+		}
+		
 		cmd = Integer.parseInt(br.readLine());
 		for(int i=0; i< cmd; i++) // cmd input 
 		{
@@ -35,44 +41,51 @@ public class baek1406 {
 			
 			command(cmdArr[i][0], i);
 		}
-		for(char c : vec)
+		setting();
+		while(!right.isEmpty())
 		{
-			sb.append(c);
+			sb.append(right.pop());
 		}
 		System.out.println(sb);
 	}
+	public static void setting() {
+		while(!left.isEmpty())
+		{
+			right.push(left.pop());
+		}
+	}
 	public static void command(char cmd, int index)
 	{
+		char temp;
 		if(cmd == 'L')
 		{
-			if(cursor > 0) cursor--; // 왼쪽으로 한칸 옴김  
+			if(!left.isEmpty()) 
+			{
+				temp = left.pop();
+				right.push(temp);
+			}
 		}
 		else if(cmd == 'D')
 		{
-			len = vec.size();
-			if(cursor < len) cursor++; // 오른쪽으로 
+			if(!right.isEmpty())
+			{
+				temp = right.pop();
+				left.push(temp);
+			}
 		}
 		else if(cmd == 'B')
 		{
-			if(cursor > 0) // 맨앞에 있지 않으면 
+			if(!left.isEmpty())
 			{
-				cursor--;
-				vec.remove(cursor);
+				left.pop();
 			}
 		}
-		else if(cmd == 'P')
+		else if(cmd =='P')
 		{
-			vec.add(cursor, cmdArr[index][1]);
-			cursor++;
+			left.push(cmdArr[index][1]);
 		}
 	}
-	public static void setting()
-	{
-		for(int i=0; i<len ; i++)
-		{
-			vec.add(str.charAt(i));
-		}
-	}
+	
 }
 
 
