@@ -17,17 +17,24 @@ public class baek10799 {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String str = br.readLine();
 		len = str.length();
-		for(int i=0; i< len; i++) // solve 
+		
+		for(int i=0; i< len; i++)
 		{
-			char target = str.charAt(i);
-			if(target == '(') stack.push(target);
-			else {
-				if(!stack.isEmpty()) {
-					stack.pop();
+			if(str.charAt(i) == '(') stack.push(str.charAt(i));
+			else // ' ) '  닫는 괄호가 나왔을 때 
+			{
+				stack.pop();
+				if(str.charAt(i-1) == '(') // 레이저 모양
+				{
 					result += stack.size();
+				}
+				else if(str.charAt(i-1) == ')')
+				{
+					result++;
 				}
 			}
 		}
+		
 		System.out.println(result);
 	}
 
