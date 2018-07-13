@@ -9,7 +9,8 @@ import java.util.StringTokenizer;
  */
 public class baek13458 {
 
-	static int N, B, C, result; 
+	static int N, B, C;
+	static long result; 
 	static final int MAX = 1000002;
 	static int[] map = new int[MAX]; // 각 방마다 응시자 수 
 	public static void main(String[] args) throws NumberFormatException, IOException {
@@ -25,7 +26,7 @@ public class baek13458 {
 		st = new StringTokenizer(br.readLine());
 		B = Integer.parseInt(st.nextToken()); // 총감독  
 		C = Integer.parseInt(st.nextToken()); // 부감독 
-		int num =0;
+		
 		setting(); // 미리 총감독 수 제외하고 확인 
 		result = N;
 		for(int i=1; i<= N; i++)

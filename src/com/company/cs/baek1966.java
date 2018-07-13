@@ -3,20 +3,17 @@ package com.company.cs;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.StringTokenizer;
 /**
  * 프린터 큐 
- *
  */
 public class baek1966 {
 
-	static int[] map = new int[101];
 	static int N, M;
-	static ArrayList<Integer> arr = new ArrayList<>(); 
 	static Queue<Integer> que = new LinkedList<>();
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		// TODO Auto-generated method stub
@@ -32,11 +29,9 @@ public class baek1966 {
 			st = new StringTokenizer(br.readLine());
 			for(int i=0; i<N; i++)
 			{
-				int temp = Integer.parseInt(st.nextToken());
-				que.add(temp);
-				arr.add(temp);
+				que.add(Integer.parseInt(st.nextToken()));
 			}	
-			Collections.sort(arr);
+
 			int result = solve(M);
 			
 			System.out.println(result);
@@ -44,24 +39,24 @@ public class baek1966 {
 	}
 	public static int solve(int index)
 	{
-		int cnt =1, checkIdx = arr.size()-1; // sorting 후 맨 뒤 인덱스가 가장 큰 값!
+		PriorityQueue<Integer> maxArr = new PriorityQueue<>(new Mysort());
+		maxArr.addAll(que);
+		int cnt = 1;
 		int targetIdx = index; // 몇번째 출력인지 찾을 값 
+		int maxValue = maxArr.poll(); // 가장 큰 값 셋팅 
+		
 		while(!que.isEmpty())
 		{
 			int value = que.poll();
-			
-			if(arr.get(checkIdx) == value) 
+			//System.out.println(value+" "+targetIdx+" "+maxValue);
+			if(maxValue == value) 
 			{
 				if(targetIdx ==0) break; // 찾은 경우 !
 				else // 못 찾은 경우 ( 출력 ) 
 				{
 					cnt++; // 몇번째 출력했는지 카운트
 					
-					while(checkIdx > 0)
-					{
-						checkIdx--;
-						if(arr.get(checkIdx) < arr.get(checkIdx+1)) break;
-					}
+					maxValue = maxArr.poll();
 				}
 			}
 			else que.add(value); // 못찾은 경우 다시 큐 맨뒤로 넣어줌 
@@ -69,13 +64,22 @@ public class baek1966 {
 			if(targetIdx == 0) targetIdx = que.size()-1; // 찾을 target value 
 			else targetIdx--;
 		}
-		
 		return cnt;
 	}
 	public static void init()
 	{
-		arr.clear();
 		que.clear();
+	}
+	private static class Mysort implements Comparator<Integer>
+	{
+		@Override
+		public int compare(Integer o1, Integer o2) {
+			// TODO Auto-generated method stub
+			if(o1 < o2) return 1;
+			else if(o1 > o2) return -1;
+			else return 0;
+		}
+		
 	}
 }
 
