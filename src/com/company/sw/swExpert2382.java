@@ -55,7 +55,7 @@ public class swExpert2382 {
 	public static void solve()
 	{
 		
-		while(!que.isEmpty()) // 예외 찾기 
+		while(!que.isEmpty())  
 		{
 			if(que.peek().min == M) {
 				break;
@@ -65,9 +65,12 @@ public class swExpert2382 {
 			int dir = node.dir;
 			int min = node.min;
 			
-			if(sumArr[node.dx][node.dy] != sum) {
-				System.out.println(node.dx+" "+node.dy);
-				System.out.println(axisArr[node.dx][node.dy] +" "+ dir +"//"+ sumArr[node.dx][node.dy]+" "+ sum);
+			System.out.println("( " +node.dx+", "+node.dy+" ) "+ sum +" "+dir+" "+min);
+			System.out.println(sumArr[node.dx][node.dy]+" // "+ axisArr[node.dx][node.dy]);
+			
+			if(axisArr[node.dx][node.dy] != dir) 
+			{
+				//System.out.println("continue : "+node.dx+" "+node.dy);
 				continue;
 			}
 			int rDx = node.dx + dxArr[dir];
@@ -78,12 +81,11 @@ public class swExpert2382 {
 				sum /= 2;
 				sumArr[rDx][rDy] = sum;
 				axisArr[rDx][rDy] = dir;
-			
+				visited[rDx][rDy] = min;
+				
 			}
 			else if(visited[rDx][rDy] == min && min > 0) { // 중복 
-				
 				if(checkMax[rDx][rDy] < sum) {
-					System.out.println(checkMax[rDx][rDy] +" "+ sum);
 					checkMax[rDx][rDy] = sum;
 					axisArr[rDx][rDy] = dir;
 				}
