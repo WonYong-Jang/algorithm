@@ -55,7 +55,7 @@ public class swExpert2382 {
 	public static void solve()
 	{
 		
-		while(!que.isEmpty())
+		while(!que.isEmpty()) // 예외 찾기 
 		{
 			if(que.peek().min == M) {
 				break;
