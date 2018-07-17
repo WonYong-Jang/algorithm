@@ -3,146 +3,105 @@ package com.company.sw;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 /**
- * 미생물 격리 ( 모의 SW 역량 테스트 ) 
+ * 미생물 격리 
  */
 public class swExpert2382 {
-
-	static int N, M, K; // 셀의 갯수, 격리 시간, 미생물 군집의 수
-	static Queue<Node> que = new LinkedList<>();
-	static int[][] map = new int[101][101]; // 처음 input 
-	static int[][] visited = new int[101][101]; // 방문 표시 ( 시간으로 중복인지 확인 할수 있음) 
-	static int[][] checkMax = new int[101][101]; //가장 큰 미생물 수 찾기 위한 배열 
-	static int[][] axisArr = new int[101][101]; // 가장 큰 미생물수 배열 에 방향 정보 
-	static int[][] sumArr = new int[101][101]; 
-	static int[] dxArr = {0, -1, 1, 0, 0}, dyArr = {0 , 0, 0, -1, 1}; // 상 하 좌 우 
-	static int[] reverse = {0,2,1,4,3}; // 반대 방향 인덱스 ! 
+	
+	static ArrayList<Node> arr;
+	static int N, M, K;
+	static int[] dxArr = {0,-1,1,0,0}, dyArr = {0,0,0,-1,1}; //  상 하 좌 우 / 1 2 3 4
+	static int[] reverse = {0,2,1,4,3};
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 		int testCase = Integer.parseInt(br.readLine());
-		int dx, dy, cnt, dir;
 		for(int k=1; k<= testCase; k++)
 		{
+			int dx, dy, sum, dir;
 			st = new StringTokenizer(br.readLine());
 			N = Integer.parseInt(st.nextToken());
 			M = Integer.parseInt(st.nextToken());
 			K = Integer.parseInt(st.nextToken());
-			init();
-			for(int i=0; i<K ;i++) // input 
+			arr = new ArrayList<>();
+			for(int i=0; i< K; i++)
 			{
 				st = new StringTokenizer(br.readLine());
 				dx = Integer.parseInt(st.nextToken());
 				dy = Integer.parseInt(st.nextToken());
-				cnt = Integer.parseInt(st.nextToken());
+				sum = Integer.parseInt(st.nextToken());
 				dir = Integer.parseInt(st.nextToken());
-				que.add(new Node(dx, dy, cnt, dir, 0));
-				sumArr[dx][dy] = cnt;
-				checkMax[dx][dy] = cnt;
-				axisArr[dx][dy] = dir;
+				arr.add(new Node(dx,dy,sum,dir));
+				
+			}
+			solve();
+			int result=0;
+			for(int i=0; i< arr.size(); i++)
+			{
+				if(arr.get(i).sum ==0) continue;
+				result += arr.get(i).sum;
 			}
 			
-			solve();
-			printSum();
-			//System.out.println("#"+k+" "+printSum());
+			System.out.println("#"+k+" "+result);
 		}
 	}
 	public static void solve()
 	{
-		
-		while(!que.isEmpty())  
+		for(int k=0; k< M; k++) // 해당 시간 만큼 
 		{
-			if(que.peek().min == M) {
-				break;
-			}
-			Node node = que.poll();
-			int sum = node.sum;
-			int dir = node.dir;
-			int min = node.min;
+			int[][] dirMap = new int[N][N]; // 방향 저장 
+			int[][] sumMap = new int[N][N]; // 전체 합 
+			int[][] maxMap = new int[N][N]; // 가장 큰 값 찾는 
 			
-			System.out.println("( " +node.dx+", "+node.dy+" ) "+ sum +" "+dir+" "+min);
-			System.out.println(sumArr[node.dx][node.dy]+" // "+ axisArr[node.dx][node.dy]);
-			
-			if(axisArr[node.dx][node.dy] != dir) 
+			for(int i=0; i< arr.size(); i++)
 			{
-				//System.out.println("continue : "+node.dx+" "+node.dy);
-				continue;
-			}
-			int rDx = node.dx + dxArr[dir];
-			int rDy = node.dy + dyArr[dir];
-			min++; // 시간 증가 
-			if(isBoundary(rDx, rDy)) { // 약품 처리 공간에 접근 할 경우 
-				dir = reverse[dir]; // 반대 방향 바꾸기
-				sum /= 2;
-				sumArr[rDx][rDy] = sum;
-				axisArr[rDx][rDy] = dir;
-				visited[rDx][rDy] = min;
+				if(arr.get(i).sum == 0) continue;
 				
-			}
-			else if(visited[rDx][rDy] == min && min > 0) { // 중복 
-				if(checkMax[rDx][rDy] < sum) {
-					checkMax[rDx][rDy] = sum;
-					axisArr[rDx][rDy] = dir;
+				int dir = arr.get(i).dir;
+				int sum = arr.get(i).sum;
+				
+				int rDx = arr.get(i).dx + dxArr[dir];
+				int rDy = arr.get(i).dy + dyArr[dir];
+				
+				if(isBoundary(rDx, rDy)) { // 경계선
+					dirMap[rDx][rDy] = reverse[dir]; // 반대 방향 
+					sumMap[rDx][rDy] = sum/2 ;
 				}
-				sumArr[rDx][rDy] += sum;
+				else if(sumMap[rDx][rDy] != 0) { // 겹쳤을 때 
+					sumMap[rDx][rDy] += sum;
+					if(maxMap[rDx][rDy] < sum) {
+						maxMap[rDx][rDy] = sum;
+						dirMap[rDx][rDy] = dir;
+					}
+				}
+				else {
+					sumMap[rDx][rDy] = sum;
+					maxMap[rDx][rDy] = sum;
+					dirMap[rDx][rDy] = dir;
+				}
 			}
-			else {
-				
-				visited[rDx][rDy] = min;
-				checkMax[rDx][rDy] = sum;
-				axisArr[rDx][rDy] = dir;
-				sumArr[rDx][rDy] = sum;
-			}
-			que.add(new Node(rDx,rDy,sumArr[rDx][rDy],axisArr[rDx][rDy],min));
-		}
-	}
-	public static int printSum()
-	{
-		int sum=0;
-		System.out.println(que.size());
-		while(!que.isEmpty())
-		{
-			Node node = que.poll();
-			
-			System.out.println(node.dx+" "+node.dy+" // "+node.sum);
-		}
-		for(int i=0; i<N; i++)
-		{
-			for(int j=0; j< N; j++)
+			arr.clear();
+			for(int i=0; i< N; i++)
 			{
-				//System.out.print(sumArr[i][j]+" ");
-			}
-			System.out.println();
-		}
-		return sum;
-	}
-
-	public static boolean isBoundary(int dx, int dy) { // 군집이 약품 처리 공간에 들어 왔는지 확인 
-		return dx ==0 || dy == 0 || dx == N-1 || dy == N-1;
-	}
-	public static void init()
-	{
-		que.clear();
-		for(int i=0; i< N; i++)
-		{
-			for(int j=0; j<N; j++)
-			{
-				visited[i][j] = 0;
-				checkMax[i][j] = 0;
-				sumArr[i][j] = 0;
-				axisArr[i][j] = 0;
+				for(int j=0; j< N; j++)
+				{
+					if(sumMap[i][j] > 0)
+						arr.add(new Node(i,j,sumMap[i][j],dirMap[i][j]));
+				}
 			}
 		}
 	}
-	static class Node{
-		int dx, dy, sum, dir, min; // x,y좌표, 미생물 합, 방향, 시간  
-		Node(int a, int b, int c, int d, int e){
-			dx= a; dy=b; sum =c; dir =d; min =e;
+	public static boolean isBoundary(int dx, int dy) {
+		return dx ==0 || dy ==0 || dx == N-1 || dy == N-1;
+	}
+	static class Node {
+		int dx,dy, sum, dir;
+		Node(int a, int b, int c, int d) {
+			dx =a; dy =b; sum =c; dir=d;
 		}
 	}
 }
