@@ -53,20 +53,20 @@ public class baek14891 {
 			{   
 				 // 현재 톱니 바퀴가 시계방향일때 다음 확인할 톱니바퀴 반시계방향
 				visited[num+1] = 1;
-				solve(num+1, reverse(dir) ); // 반대방향 넣어 주기 
+				solve(num+1, dir * -1 ); // 반대방향 넣어 주기 
 				visited[num+1] = 0;
 				
-				turn(num+1, reverse(dir));
+				turn(num+1, dir * -1 );
 			}
 		}
 		if(num-1 > 0 && visited[num-1] ==0 ) { // 해당 인덱스에서 왼쪽 톱니 바퀴 확인 
 			if(map[num][6] != map[num-1][2]) // 같지 않으면 해당 방향의 반대 방향으로 회전 
 			{
 				visited[num-1] = 1;
-				solve(num-1, reverse(dir) );
+				solve(num-1, dir * -1 );
 				visited[num-1] = 0;
 				
-				turn(num-1, reverse(dir));
+				turn(num-1, dir * -1);
 			}
 		}
 		
@@ -89,16 +89,6 @@ public class baek14891 {
 				map[num][ (i+1) % 8 ] = temp[i]; // 으론쪽 으로 shift
 			}
 		}
-	}
-	public static int reverse(int dir) // 반대 방향 
-	{
-		int result =0;
-		switch(dir)
-		{
-		case -1:result=1;break;
-		case 1:result=-1;break;
-		}
-		return result;
 	}
 	public static void printFun()
 	{
