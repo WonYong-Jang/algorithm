@@ -71,7 +71,7 @@ public class baek14891 {
 		}
 		
 	}
-	public static void turn(int num, int dir) // 반시계 방향 회전  
+	public static void turn(int num, int dir) // 방향에 따라 회전    
 	{
 		int[] temp = new int[8];
 		for(int i=0; i< 8; i++)
