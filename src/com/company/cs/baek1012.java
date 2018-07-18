@@ -5,7 +5,9 @@ import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
-
+/**
+ * 유기농 배추 
+ */
 public class baek1012 {
 
 	static int[][] map; // input 
