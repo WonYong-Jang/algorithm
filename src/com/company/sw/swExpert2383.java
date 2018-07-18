@@ -9,7 +9,6 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 /**
  * 점심 식사 시간  
- *
  */
 public class swExpert2383 {
 
@@ -34,10 +33,11 @@ public class swExpert2383 {
 				{
 					temp = Integer.parseInt(st.nextToken());
 					map[i][j] = temp;
-					if(temp == 1) person.add(new Person(i, j, 0, 0, 0));
-					else if(temp >= 2) node.add(new Node(i,j));
+					if(temp == 1) person.add(new Person(i, j, 0, 0, 0, 0));
+					else if(temp >= 2) node.add(new Node(i, j));
 				}
 			}
+			/*
 			lenPerson = person.size();
 			for(int i=0; i< lenPerson; i++)
 			{
@@ -45,7 +45,16 @@ public class swExpert2383 {
 				{
 					dfs(i,j);
 				}
-			}
+			}*/
+			person.clear();
+			person.add(new Person(1,3,0,3,0,0));
+			person.add(new Person(1,4,0,2,0,0));
+			person.add(new Person(2,3,0,2,0,0));
+			person.add(new Person(3,4,0,2,0,0));
+			
+			person.add(new Person(4,2,0,2,1,0));
+			person.add(new Person(5,1,0,2,1,0));
+			solve();
 			System.out.println("#"+k+" "+ result);
 		}
 	}
@@ -68,52 +77,53 @@ public class swExpert2383 {
 	public static void solve() 
 	{
 		Queue<Person> que = new LinkedList<>();
-		int[] stairs = new int[2]; // 1, 2 번 계단 
+		int[] exit = new int[2]; // 1, 2 번 계단 
 		que.addAll(person);
 		int curMin =0;
-		//System.out.println(">>>>>>>>>>>>>>>>>>>>>");
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>");
 		while(!que.isEmpty()) 
 		{
 			Person p = que.poll();
-			int curDis = p.curDis; // 계단 입구까지 남은 거리
-			int curFloor = p.curFloor;
-			int target = p.target; //1, 2 번 계단 중 하나   
-			int targetDis = p.targetDis;
-			int targetFloor = map[node.get(target).dx][node.get(target).dy]; // 계단 층수 
-			int flag = p.flag; // 1 : 계단 입구 도착 , 2 : 계단 내려가는 중 ! 
-			curMin = Math.max(curMin, curDis);
-			//System.out.println(curDis+" "+curFloor+" "+flag);
-			if(flag ==2 ) // 계단 을 내려가고 있는 중 ! 
-			{
-				if(curFloor <= targetFloor) que.add(new Person(p.dx, p.dy, curDis+1, curFloor+1, targetFloor, target,flag));
-				else stairs[target]--;
+			curMin = Math.max(curMin, p.min);
+			System.out.println("( "+p.dx+", "+p.dy+" ) / " +p.curDis + " -> "+p.targetDis +" / 시간 : "+p.min);
+			if(p.dx == -1) { // 계단으로 내려가는 중 ! 
+				if(p.curDis < p.targetDis) {
+					System.out.println("계단 내려가는 중 ! ");
+					que.add(new Person(-1,p.dy,p.curDis+1,p.targetDis,p.type,p.min+1));
+				}
+				if(p.curDis == p.targetDis) {
+					System.out.println("계단 내려가는 것 완료  ! ");
+					exit[p.type]--;
+					continue;
+				}
+				
 			}
-			else if(flag == 1) // 계단 입구 도착 !  
-			{
-				if(stairs[target] < 3) { // 내려 갈수 있는 상태 
-					que.add(new Person(p.dx, p.dy, curDis+1, 2, targetFloor, target, 2));
+			else { // 계단으로 진입 중 
+				if(p.curDis < p.targetDis) { // 계단으로 이동 중 
+					System.out.println("계단까지 이동 중   ! ");
+					que.add(new Person(p.dx, p.dy, p.curDis+1, p.targetDis, p.type, p.min+1));
 				}
-				else { // 3명이 모두 차있는 상태  
-					que.add(new Person(p.dx, p.dy, curDis+1, 1, targetFloor, target, flag));
-				}
-			}
-			else {
-				if(curDis < targetDis) {
-					que.add(new Person(p.dx, p.dy, curDis+1, 0, targetDis, target, flag));
-				}
-				else {
-					que.add(new Person(p.dx, p.dy, curDis+1, 0, targetDis, target, 1));
+				else if(p.curDis == p.targetDis) { // 계단 도착 
+					if(exit[p.type] < 3) {
+						System.out.println("계단입구 도착    ! ");
+						que.add(new Person(-1, p.dy, 1, map[node.get(p.type).dx][node.get(p.type).dy], p.type, p.min+1));
+						exit[p.type]++;
+					}
+					else { // 계단 3명 이하 일때까지 대기 
+						System.out.println(" 꽉차서 대  기   ! ");
+						que.add(new Person(p.dx, p.dy, p.curDis, p.targetDis, p.type, p.min+1));
+					}
 				}
 			}
 		}
 		result = Math.min(result, curMin);
 	}
-	public static void setting(int index, int target) 
+	public static void setting(int index, int type) 
 	{
 		Person p = person.get(index);
-		Node n = node.get(target);
+		Node n = node.get(type);
 		person.get(index).targetDis = Math.abs(p.dx- n.dx) + Math.abs(p.dy-n.dy); // 거리 계산 
-		person.get(index).target = target; // 1 번 인지 2번 계단인지 
+		person.get(index).type = type; // 1 번 인지 2번 계단인지
 	}
 	public static void init() {
 		result = Integer.MAX_VALUE;
@@ -121,12 +131,9 @@ public class swExpert2383 {
 		node.clear();
 	}
 	static class Person { // 사람 
-		int dx, dy, curDis,curFloor, targetDis, target, flag; // 목표계단입구까지 거리, 계단 내려가고 있을때 현재 층 수 
-		Person(int a, int b, int c, int d, int e) {
-			dx =a; dy =b; curDis =c; curFloor=d; flag =e;
-		}
-		Person(int a, int b, int c, int d, int e, int f,int g) {
-			dx =a; dy =b; curDis =c; curFloor=d; targetDis=e; target=f; flag=g;
+		int dx, dy, curDis, targetDis, type, min;  // 현재 거리, 목표 거리, 계단 종류 
+		Person(int a, int b, int c, int d, int e, int f) {
+			dx =a; dy =b; curDis =c; targetDis =d; type = e; min =f;
 		}
 	}
 	static class Node { // 계단  
