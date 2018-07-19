@@ -80,6 +80,7 @@ public class swExpert2383 {
 		int[] exit = new int[2]; // 1, 2 번 계단 
 		que.addAll(person);
 		int curMin =0;
+		int exitNum =0;
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>");
 		while(!que.isEmpty()) 
 		{
@@ -106,7 +107,7 @@ public class swExpert2383 {
 				else if(p.curDis == p.targetDis) { // 계단 도착 
 					if(exit[p.type] < 3) {
 						System.out.println("계단입구 도착    ! ");
-						que.add(new Person(-1, p.dy, 1, map[node.get(p.type).dx][node.get(p.type).dy], p.type, p.min+1));
+						que.add(new Person(-1, p.dy, 0, map[node.get(p.type).dx][node.get(p.type).dy], p.type, p.min+1));
 						exit[p.type]++;
 					}
 					else { // 계단 3명 이하 일때까지 대기 
