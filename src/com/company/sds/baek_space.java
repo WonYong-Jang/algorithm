@@ -11,7 +11,7 @@ import java.util.StringTokenizer;
  */
 public class baek_space {
 
-	static int N, M, dx, dy, nx, ny, minDis; // 배열 크기, 시작점, 끝점 위치, 최소 거리  
+	static int N, M, dx, dy, nx, ny; // 배열 크기, 시작점, 끝점 위치, 최소 거리  
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -26,14 +26,31 @@ public class baek_space {
 			dy = Integer.parseInt(st.nextToken());
 			nx = Integer.parseInt(st.nextToken());
 			ny = Integer.parseInt(st.nextToken());
-			minDis = Integer.MAX_VALUE;
 			
-			int tempDis = Math.abs(dx - nx) + Math.abs(dy - ny); // 배열 범위를 넘어가지 않고 구한 거리 
+			int rDx = Math.abs(dx - nx);
+			int rDy = Math.abs(dy - ny);
 			
-			minDis = Integer.min(minDis, tempDis);
+			int temp =0;
+			if(dx > nx) {
+				temp = (N-dx) + nx;
+			}
+			else if(dx < nx) {
+				temp = (N-nx) + dx;
+			}
+			else temp =0;
+			rDx = Math.min(rDx, temp);
 			
+			if(dy > ny) {
+				temp = (M-dy) + ny;
+			}
+			else if(dy < ny) {
+				temp = (M-ny) + dy;
+			}
+			else temp =0;
 			
+			rDy = Math.min(rDy, temp);
 			
+			System.out.println("#"+k+" "+ (rDx+rDy) );
 		}
 	}
 	
