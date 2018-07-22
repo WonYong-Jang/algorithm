@@ -11,7 +11,7 @@ import java.util.StringTokenizer;
  */
 public class sds_calculator {
 
-	static PriorityQueue<Long> que = new PriorityQueue<>(); //  우선순위 큐 이용 
+	static PriorityQueue<Long> que = new PriorityQueue<>(); //  우선순위 큐 이용 !
 	static int N;
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
