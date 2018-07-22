@@ -9,7 +9,7 @@ import java.util.StringTokenizer;
 /**
  * 순환 공간 
  */
-public class baek_space {
+public class sds_space {
 
 	static int N, M, dx, dy, nx, ny; // 배열 크기, 시작점, 끝점 위치, 최소 거리  
 	public static void main(String[] args) throws IOException {
