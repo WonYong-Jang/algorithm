@@ -37,31 +37,37 @@ public class swExpert2383 {
 					else if(temp >= 2) node.add(new Node(i, j));
 				}
 			}
-			/*
+			
 			lenPerson = person.size();
+			
 			for(int i=0; i< lenPerson; i++)
 			{
 				for(int j=0 ; j<2; j++)
 				{
 					dfs(i,j);
 				}
-			}*/
-			person.clear();
-			person.add(new Person(1,3,0,3,0,0));
-			person.add(new Person(1,4,0,2,0,0));
-			person.add(new Person(2,3,0,2,0,0));
-			person.add(new Person(3,4,0,2,0,0));
+			}
 			
-			person.add(new Person(4,2,0,2,1,0));
-			person.add(new Person(5,1,0,2,1,0));
+			/*
+			person.clear();
+			person.add(new Person(2,5,0,8,0,0));
+			person.add(new Person(3,3,0,5,0,0));
+			person.add(new Person(6,3,0,2,0,0));
+			person.add(new Person(7,1,0,1,0,0));
+			person.add(new Person(7,2,0,2,0,0));
+			
+			person.add(new Person(6,5,0,5,1,0));
+			person.add(new Person(7,5,0,6,1,0));
+			person.add(new Person(7,7,0,4,1,0));
 			solve();
+			*/
 			System.out.println("#"+k+" "+ result);
 		}
 	}
 	public static void dfs(int index, int target) { // 해당 사람이 1, 2 계단중 선택  
 		
 		setting(index, target); // 해당 사람이 몇번 계단으로 갈지 셋 팅  
-		
+		if(result == 11) return;
 		if(index == lenPerson-1) {
 			solve();
 			return;
@@ -77,15 +83,15 @@ public class swExpert2383 {
 	public static void solve() 
 	{
 		Queue<Person> que = new LinkedList<>();
-		int[] exit = new int[2]; // 1, 2 번 계단 
+		ArrayList<Person> wait = new ArrayList<>();
+		int[] exit = new int[2]; // 1, 2 번 계단 수 
 		que.addAll(person);
 		int curMin =0;
-		int exitNum =0;
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>");
 		while(!que.isEmpty()) 
 		{
 			Person p = que.poll();
-			curMin = Math.max(curMin, p.min);
+			curMin = Math.max(curMin, p.min); // 시간 업데이트 
 			System.out.println("( "+p.dx+", "+p.dy+" ) / " +p.curDis + " -> "+p.targetDis +" / 시간 : "+p.min);
 			if(p.dx == -1) { // 계단으로 내려가는 중 ! 
 				if(p.curDis < p.targetDis) {
@@ -95,6 +101,16 @@ public class swExpert2383 {
 				if(p.curDis == p.targetDis) {
 					System.out.println("계단 내려가는 것 완료  ! ");
 					exit[p.type]--;
+					if(!wait.isEmpty()) { // 대기 사람이 있었을 경우 
+						for(int i=0; i< wait.size(); i++)
+						{
+							if(wait.get(i).type == p.type)
+							{
+								que.add(new Person(-1,p.dy, 0, map[node.get(p.type).dx][node.get(p.type).dy], p.type, p.min));
+								wait.remove(i);
+							}
+						}
+					}
 					continue;
 				}
 				
@@ -112,7 +128,8 @@ public class swExpert2383 {
 					}
 					else { // 계단 3명 이하 일때까지 대기 
 						System.out.println(" 꽉차서 대  기   ! ");
-						que.add(new Person(p.dx, p.dy, p.curDis, p.targetDis, p.type, p.min+1));
+						//que.add(new Person(p.dx, p.dy, p.curDis, p.targetDis, p.type, p.min+1));
+						wait.add(new Person(-1, p.dy, 1, map[node.get(p.type).dx][node.get(p.type).dy], p.type, p.min+1));
 					}
 				}
 			}
