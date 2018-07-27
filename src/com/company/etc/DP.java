@@ -12,7 +12,7 @@ import java.util.StringTokenizer;
 public class DP {
 
 	// 점화식 1, 3, 5, 11 ...  ==>  C(n) = C(n-1) + 2 * C(n-2)
-	static BigInteger[] map = new BigInteger[252]; // 251로 두면 답이 틀리는 이유??????????????
+	static BigInteger[] map = new BigInteger[251]; 
 	static int N;
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		// TODO Auto-generated method stub
