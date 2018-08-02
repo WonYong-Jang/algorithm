@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 /**
- * 타임머신 
+ * 타임머신 ( 벨만 포드 )
  */
 public class baek11657 {
 	
