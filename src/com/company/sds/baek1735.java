@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 /**
- * 분수 합 ( 유클리드 호제법 이용 ) 
+ * 분수 합 ( 유클리드 호제법 이용 ) !
  */
 public class baek1735 {
 
