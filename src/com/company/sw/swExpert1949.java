@@ -9,7 +9,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 /**
- * 등산로 조정  
+ * 등산로 조정 
  */
 public class swExpert1949 {
 	
