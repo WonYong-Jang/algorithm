@@ -27,7 +27,8 @@ public class baek11060 {
 			data[i] = Integer.parseInt(st.nextToken());
 		}
 		solve();
-		if(visit[N] == 0) System.out.println(-1);
+		if(N == 1) System.out.println(0);
+		else if(visit[N] == 0) System.out.println(-1);
 		else System.out.println(visit[N]);
 	}
 	public static void solve()
