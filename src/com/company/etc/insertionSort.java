@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
-
+/**
+ * 삽입 정렬 
+ */
 public class insertionSort {
 
 	static int N;
@@ -19,17 +21,18 @@ public class insertionSort {
 			st = new StringTokenizer(br.readLine());
 			data[i] = Integer.parseInt(st.nextToken());
 		}
-		int min;
-		for(int i=1; i< N; i++)
+		
+		int j=0;
+		for(int i=1; i< N; i++) // 두번째 인덱스 부터 시작 
 		{
-			min = i;
-			for(int j = i-1; j >=0; j--)
+			j= i -1;
+			int target = data[i]; // 삽입할 숫자 
+			while(j >= 0 && data[j] > target) // target 위치 찾기 
 			{
-				if(data[min] < data[j]) min =j;
+				data[j+1] = data[j]; // target 보다 큰 숫자 앞으로 한칸 씩 당기기 
+				j--;
 			}
-			int temp = data[i];
-			data[i] = data[min];
-			data[min] = temp;
+			data[j+1] = target; // 자리 삽입 
 		}
 		
 		for(int i=0 ; i< N; i++)
