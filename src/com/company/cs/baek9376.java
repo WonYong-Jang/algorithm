@@ -6,7 +6,9 @@ import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
-
+/**
+ * 탈옥 
+ */
 public class baek9376 {
 
 	static int H, W, ans;
