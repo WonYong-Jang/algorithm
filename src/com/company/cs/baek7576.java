@@ -8,7 +8,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 /**
- * 토마토 
+ * 토마토. 
  */
 public class baek7576 {
 
