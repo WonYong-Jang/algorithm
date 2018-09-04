@@ -62,7 +62,7 @@ public class baek11048 {
 				int nx = n.dx + dxArr[i];
 				int ny = n.dy + dyArr[i];
 				if(!isRange(nx, ny)) continue;
-				if(dis[nx][ny] == -1 || dis[nx][ny] < dis[n.dx][n.dy] + map[nx][ny])
+				if(dis[nx][ny] == -1 || dis[nx][ny] < dis[n.dx][n.dy] + map[nx][ny]) // 갱신 
 				{
 					dis[nx][ny] = dis[n.dx][n.dy] + map[nx][ny];
 					que.add(new Node(nx,ny));
