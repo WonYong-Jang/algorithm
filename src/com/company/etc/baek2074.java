@@ -20,16 +20,17 @@ public class baek2074 {
 		
 		while( N > (1 << index) )
 		{
-			//if(index ==0) temp = 2;
-			//else temp *= temp;
+			if(index ==0) temp = 2;
+			else temp *= temp;
 			cnt++;
 			if( (N & (1 << index)) > 0)
 			{
-				//sum *= temp;
+				sum *= temp;
 			}
 			index++;
 		}
-		System.out.println(cnt);
+	
+		System.out.println(sum+" "+cnt);
 	}
 
 }
