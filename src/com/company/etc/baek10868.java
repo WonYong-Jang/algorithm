@@ -52,8 +52,8 @@ public class baek10868 {
 			
 			if(eIndex % 2 == 0) ans = min(data[eIndex], ans);
 			eIndex = (eIndex-1) / 2;
-			
 		}
+		
 		System.out.println(ans);
 	}
 	public static void setTree()
