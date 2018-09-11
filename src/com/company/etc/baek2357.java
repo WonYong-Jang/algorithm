@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 /**
- * 최소값과 최대 값 ( 세그먼트 트리 / 인덱스 트리  ) 
+ * 최소값과 최대 값 ( 세그먼트 트리 / 인덱스 트리 !  ) 
  */
 public class baek2357 {
 
