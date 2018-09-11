@@ -48,6 +48,7 @@ public class baek2357 {
 		}
 		
 	}
+	// 구간별 최소 트리 구성 
 	public static void minCheck(int start, int end)
 	{
 		int sIndex = start + s - 1;
@@ -63,6 +64,7 @@ public class baek2357 {
 		}
 		System.out.print(ans+" ");
 	}
+	// 구간별 최대 트리 구성  
 	public static void maxCheck(int start, int end)
 	{
 		int sIndex = start + s - 1;
