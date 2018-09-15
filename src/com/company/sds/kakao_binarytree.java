@@ -3,7 +3,7 @@ package com.company.sds;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
-class Solution {
+class kakao_binarytree {
 	static PriorityQueue<Node> que = new PriorityQueue<>(new mySort());
 	static Node[] tree = null;
 	static final int max = 1000005*4;
@@ -60,8 +60,7 @@ class Solution {
     		tree[idx] = n;
     	}
     	if(tree[idx].dy > n.dy && tree[idx].dx > n.dx && idx*2 < max) insert(n,idx*2);
-    	else if(tree[idx].dy > n.dy && idx*2 < max) insert(n,idx*2 + 1);
-    	//else if(tree[idx].dy > n.dy && tree[idx].dx < n.dx && idx*2 < max) insert(n,idx*2 + 1);
+    	else if(tree[idx].dy > n.dy && tree[idx].dx < n.dx && idx*2 < max) insert(n,idx*2 + 1);
     }
     public static void preorder(int idx)
     {
