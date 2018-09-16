@@ -7,97 +7,80 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 /**
- * 치킨 배달 
+ * 드래곤 커브  
  */
 public class baek15685 {
-
-	static int N, M, len, ans;
-	static int[][] map = new int[55][55];
-	static ArrayList<Node> home = new ArrayList<>();
-	static ArrayList<Node> chicken = new ArrayList<>();
-	static ArrayList<Node> sel = new ArrayList<>(); // M 만큼 선택된 치킨 
-	static int[] check = new int[15]; // 0 ~ 12  치킨 선택 확인 배열 
+	
+	static int dx, dy, D ,G; // x, y 좌표 / 방향 / 세대 
+	static int[][] map = new int[105][105]; // 그릴 맵 
+	static int[] dxArr = {0, -1, 0, 1}, dyArr = {1, 0, -1, 0}; // 동 북 서 남 
+	static ArrayList<Integer> dirArr = new ArrayList<>(); // 10세대 일때 최대 나올수 있는 방향 배열 갯수 1024
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
-		int temp =0;
-		ans = Integer.MAX_VALUE;
-		for(int i=1; i<= N; i++)
+		int curve = Integer.parseInt(st.nextToken()); // 드래곤 커브 갯수 
+		
+		for(int i=0; i< curve; i++)
 		{
 			st = new StringTokenizer(br.readLine());
-			for(int j=1; j<= N; j++)
+			dy = Integer.parseInt(st.nextToken()); // x, y 반대로 입력 받기 
+			dx = Integer.parseInt(st.nextToken());
+			D = Integer.parseInt(st.nextToken());
+			G = Integer.parseInt(st.nextToken());
+			
+			dirArr.clear();
+			map[dx][dy] = 1;
+			for(int k=0; k<= G; k++) // 조건 세대 까지 
 			{
-				temp = Integer.parseInt(st.nextToken());
-				map[i][j] = temp;
-				if(temp == 1) home.add(new Node(i,j));
-				else if(temp == 2) chicken.add(new Node(i,j));
+				draw(k);
 			}
 		}
-		len = chicken.size(); // 전체 치킨집 사이즈 
-		
-		for(int i = 0; i< len; i++)
-		{
-			check[i] = 1;
-			solve(i, 1);
-			check[i] = 0;
-		}
-		System.out.println(ans);
+		checkMap(); // 4꼭지점 확인 
 	}
-	public static void solve(int index ,int depth)
+	public static void checkMap()
 	{
-		if(depth == M)
-		{
-			calculate();
-			return;
-		}
-		for(int i = index + 1; i< len; i++)
-		{
-			if(check[i] == 1) continue;
-			check[i] = 1;
-			solve(i, depth+1);
-			check[i] = 0;
-		}
-	}
-	public static void calculate()
-	{
-		sel.clear();
-		int sum =0, value = 0;
-		for(int i=0; i<len; i++)
-		{
-			if(check[i] == 1) sel.add(chicken.get(i));
-		}
+		int cnt =0;
 		
-		for(int i=0; i< home.size(); i++)
+		for(int i=0; i < 100; i++)
 		{
-			value = Integer.MAX_VALUE;
-			for(int j=0; j< M; j++)
+			for(int j=0; j < 100; j++)
 			{
-				int temp = dis(i,j); // 치킨 까지 가장 거리 작은 값 
-				value = min(temp, value);
+				if(map[i][j] == 0) continue;
+				if(map[i][j+1] == 1 && map[i+1][j+1] == 1 && map[i+1][j] == 1) cnt++;
 			}
-			sum += value; // 전체 합 
 		}
-		ans = min(ans, sum);
+		System.out.println(cnt);
 	}
-	public static int dis(int i, int j) // 집에서 치킨까지 거리 구하기 a -> b 
+	public static void draw(int generation)
 	{
-		int sdx = home.get(i).dx;
-		int sdy = home.get(i).dy;
-		int edx = sel.get(j).dx;
-		int edy = sel.get(j).dy;
-		return ( sdx > edx ? sdx - edx : edx - sdx ) + ( sdy > edy ? sdy - edy : edy - sdy ) ;
-	}
-	public static int min(int a, int b)
-	{
-		return a > b ? b : a;
-	}
-	static class Node {
-		int dx, dy;
-		Node(int x, int y) {
-			dx = x; dy = y;
+		int len = dirArr.size();
+		
+		if(len == 0) { // 0 세대 일때 
+			dirArr.add(D);
+			dx += dxArr[D];
+			dy += dyArr[D];
+			map[dx][dy] = 1;
 		}
+		else 
+		{
+			for(int i=len-1; i >= 0; i--)
+			{
+				int curDir = dirArr.get(i);
+				int nextDir = (curDir+1) % 4;
+				dirArr.add(nextDir);
+				dx += dxArr[nextDir];
+				dy += dyArr[nextDir];
+				map[dx][dy] = 1;
+			}
+		}
+		
 	}
 }
+
+
+
+
+
+
+
