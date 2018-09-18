@@ -7,7 +7,7 @@ class NodeList {
 	
 	private class Node{
 		int data;
-		Node next;
+		Node next; // 노드의 다음 노드를 가르킴 
 		
 		public Node(int data)
 		{
@@ -15,7 +15,7 @@ class NodeList {
 		}
 	}
 	
-	public void addFirst(int data) // 맨 앞 추가 
+	public void addFirst(int data) // 맨 앞 노드 추가 
 	{
 		Node newNode = new Node(data); // 노드 생성 
 		
@@ -58,15 +58,15 @@ class NodeList {
 		}
 		else 
 		{
-			Node preNode = node(index-1);
-			Node nextNode = preNode.next;
+			Node preNode = node(index-1); // 그전 노드 가져오기 
+			Node nextNode = preNode.next; // 그 다음 노드 가져오기 
 			
-			Node newNode = new Node(data);
-			preNode.next = newNode;
-			newNode.next = nextNode;
+			Node newNode = new Node(data); // 중간에 삽입할 노드 
+			preNode.next = newNode; // 이전 노드랑 연결 
+			newNode.next = nextNode; // 새로만든 노드를 다음 노드와 연결 
 			size++;
 			
-			if(newNode.next == null )
+			if(newNode.next == null ) // 다음 노드가 없다는건 해당 노드가 끝 이니까 tail 로 갱신 
 			{
 				tail = newNode;
 			}
@@ -90,17 +90,17 @@ class NodeList {
 		if(k ==0) {
 			return removeFirst();
 		}
-		Node temp = node(k-1);
+		Node temp = node(k-1); // 삭제시킬 바로 이전 노드 가져오기 
 		
-		Node todoDelete = temp.next;
+		Node todoDelete = temp.next; // 삭제할 노드 
 		
-		temp.next = temp.next.next;
+		temp.next = temp.next.next; // 삭제 할 노드 다음 노드 
 		
 		int returnData = todoDelete.data;
 		
 		if(todoDelete == tail)
 		{
-			tail = temp;
+			tail = temp; // 이전 노드로 갱신 
 		}
 		
 		size--;
