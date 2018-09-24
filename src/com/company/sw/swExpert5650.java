@@ -68,9 +68,9 @@ public class swExpert5650 {
 							int nx = sdx + dxArr[m]; // 시작점으로부터 4방향 큐에 넣고 시작 
 							int ny = sdy + dyArr[m];
 							que.add(new Node(nx, ny, m, 0));
-							solve();
 						}
 					}
+					solve(); // 시작 
 				}
 			}
 			bw.write("#"+k+" "+ans+"\n");
