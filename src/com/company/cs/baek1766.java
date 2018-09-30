@@ -16,7 +16,7 @@ public class baek1766 {
 	static int N, M;
 	static int[] degree = new int[32005];
 	static ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>();
-	static PriorityQueue<Integer> que = new PriorityQueue<>()
+	static PriorityQueue<Integer> que = new PriorityQueue<>();
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
