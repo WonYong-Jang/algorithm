@@ -55,11 +55,3 @@ public class baek1890 {
 		return dx >= 1 && dy >= 1 && dx <= N && dy <= N;
 	}
 }
-
-
-
-
-
-
-
-
