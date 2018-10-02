@@ -32,7 +32,7 @@ public class baek1005 {
 			st = new StringTokenizer(br.readLine());
 			N = Integer.parseInt(st.nextToken());
 			K = Integer.parseInt(st.nextToken());
-			
+			adj.clear();
 			for(int i=0; i<= N; i++) 
 			{
 				adj.add(new ArrayList<>());
