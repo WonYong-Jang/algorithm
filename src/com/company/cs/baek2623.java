@@ -9,7 +9,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 /**
- * 음악 프로그램 ( 위상정렬 + 사이클 확인 ) 
+ * 음악 프로그램 ( 위상정렬 + 사이클 확인 가능 !  ) 
  */
 public class baek2623 {
 
