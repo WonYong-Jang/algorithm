@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 /**
- * 모든 순열 
+ * 모든 순열 ( 정석 순열 )
  */
 public class baek10974 {
 
