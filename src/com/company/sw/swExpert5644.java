@@ -123,8 +123,8 @@ public class swExpert5644 {
 				tempMax = max(tempMax, sNum); // 제일 성능 좋은거 찾기
 			}
 		}
-		
 		ans += tempMax;
+		
 	}
 	public static void setScope(int dx, int dy, int scope, int value) // bc 의 범위를 비트마스크로 표현 
 	{
