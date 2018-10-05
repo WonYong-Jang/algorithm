@@ -12,7 +12,7 @@ public class baek12836 {
 
 	static int N, Q;
 	static final int max = 10000;
-	static int[] tree = new int[4 * max];
+	static long[] tree = new long[4 * max];
 	static int sIdx, eIdx;
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
@@ -25,7 +25,8 @@ public class baek12836 {
 		while(sIdx < N) sIdx *=2;
 		eIdx = sIdx + N - 1;
 		
-		int cmd = 0, dx = 0, dy =0 , value =0;
+		int cmd = 0, dx = 0, dy =0;
+		long value =0;
 		for(int i=1; i<= Q; i++)
 		{
 			st = new StringTokenizer(br.readLine());
@@ -33,7 +34,7 @@ public class baek12836 {
 			if(cmd == 1)
 			{
 				dx = Integer.parseInt(st.nextToken());
-				value = Integer.parseInt(st.nextToken());
+				value = Long.parseLong(st.nextToken());
 				insert(dx, value);
 			}
 			else if(cmd == 2)
@@ -59,7 +60,7 @@ public class baek12836 {
 		}
 		System.out.println(sum);
 	}
-	public static void insert(int dx, int value)
+	public static void insert(int dx, long value)
 	{
 		int curIdx = sIdx + dx -1; // 현재 시작점 잡기 
 		tree[curIdx] += value;
