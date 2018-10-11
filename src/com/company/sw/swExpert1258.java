@@ -12,7 +12,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 /**
- * 행렬 찾기 
+ * 행렬 찾기. 
  */
 public class swExpert1258 {
 
@@ -101,7 +101,11 @@ public class swExpert1258 {
 			// TODO Auto-generated method stub
 			if(a.cost < b.cost) return -1;
 			else if(a.cost > b.cost ) return 1;
-			else return 0;
+			else {
+				if(a.dx < b.dx) return -1;
+				else if(a.dx > b.dx) return 1;
+				else return 0;
+			}
 		}
 	}
 	static class Node {
