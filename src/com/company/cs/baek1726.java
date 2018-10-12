@@ -6,13 +6,14 @@ import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
-
-
-
+/**
+ * 로봇 
+ */
 public class baek1726 {
 
 	static int N, M;
 	static int sdx, sdy, sdir, edx, edy, edir;
+	static int left, right; // 현재 방향 기준 
 	static int[][] map = new int[105][105];
 	static int[][] visit = new int[105][105];
 	static Queue<Node> que = new LinkedList<>();
@@ -30,7 +31,7 @@ public class baek1726 {
 			for(int j=1; j<= M; j++)
 			{
 				map[i][j] = Integer.parseInt(st.nextToken());
-				visit[i][j] = -1;
+				visit[i][j] = 0;
 			}
 		}
 		
@@ -44,53 +45,50 @@ public class baek1726 {
 		edir = Integer.parseInt(st.nextToken())-1;
 		
 		solve();
-		//debug();
 	}
 	public static void solve()
 	{
-		que.add(new Node(sdx, sdy,sdir,0));
-		que.add(new Node(sdx, sdy,( sdir+2 ) % 4,1));
-		que.add(new Node(sdx, sdy,(sdir+3 ) % 4,1));
-		visit[sdx][sdy] = 0;
+		que.add(new Node(sdx,sdy, sdir, 0));
+		direction(sdir);
+		que.add(new Node(sdx,sdy, left, 1));
+		que.add(new Node(sdx,sdy, right, 1));
+		visit[sdx][sdy] = 1;
 		
 		while(!que.isEmpty())
 		{
 			Node n = que.poll();
 			
-			System.out.println(n.dx + " " + n.dy + " "+ n.dir + " " + n.cmd);
-			
-			if(n.dx == edx && n.dy == edy && n.dir == edir) {
+			if(n.dx == edx && n.dy == edy && n.dir == edir)
+			{
 				System.out.println(n.cmd);
-				return;
 			}
 			
-			int nx =0, ny =0;
-			for(int i=0; i<4; i++)
+			int nx =n.dx, ny =n.dy;
+			for(int i=0; i<3; i++)
 			{
-				nx = n.dx;
-				ny = n.dy;
-				for(int k=0; k<3; k++)
+				nx += dxArr[n.dir];
+				ny += dyArr[n.dir];
+				if(!isRange(nx, ny) || map[nx][ny] == 1) break;
+				if(visit[nx][ny] == 1) continue;
+				
+				if(visit[nx][ny] == 0)
 				{
-					nx+= dxArr[i];
-					ny+= dyArr[i];
-					if(!isRange(nx,ny) || map[nx][ny] == 1) break;
-					
-					if(visit[nx][ny] == -1)
-					{
-						visit[nx][ny] = n.cmd +1;
-						que.add(new Node(nx, ny, n.dir, n.cmd+1));
-						que.add(new Node(nx, ny, (n.dir + 2) % 4, n.cmd+1));
-						que.add(new Node(nx, ny, (n.dir + 3) % 4, n.cmd+1));
-					}
-					else if (visit[nx][ny] != -1 && visit[nx][ny] > n.cmd + 1)
-					{
-						visit[nx][ny] = n.cmd +1;
-						que.add(new Node(nx, ny, n.dir, n.cmd+1));
-					}
-					
+					que.add(new Node(nx,ny, n.dir, n.cmd+1));
+					direction(n.dir);
+					que.add(new Node(nx,ny, left, n.cmd+2));
+					que.add(new Node(nx,ny, right, n.cmd+2));
 				}
 			}
-			
+		}
+	}
+	public static void direction(int dir)
+	{
+		switch(dir)
+		{
+		case 0: left=3; right=2; break;
+		case 1: left=2; right=3; break;
+		case 2: left=0; right=1; break;
+		case 3: left=1; right=0; break;
 		}
 	}
 	public static boolean isRange(int dx, int dy)
@@ -112,7 +110,7 @@ public class baek1726 {
 	static class Node{
 		int dx, dy, dir, cmd;
 		Node(int a, int b, int c, int d){
-			dx=a; dy=b; dir=c; cmd=d;
+			dx=a; dy=b; dir=c; cmd =d;
 		}
 	}
 }
