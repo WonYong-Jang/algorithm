@@ -16,7 +16,6 @@ public class swExpert2105 {
 	static int[][] map = new int[25][25];
 	static int[] output = new int[105];
 	static int sdx, sdy , N, ans;
-	static HashSet<Integer> set = new HashSet<>();
 	static int[] dxArr = {1, 1, -1, -1}, dyArr = {1, -1, -1, 1};
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
