@@ -14,9 +14,8 @@ public class baek10711 {
 
 	static int N, M, ans;
 	static int[][] map = new int[1005][1005];
-	static int[][] del = new int[1005][1005];
+	static int[][][] del = new int[2][1005][1005];
 	static Queue<Node> que = new LinkedList<>();
-	
 	static int[] dxArr = {-1, 0, 1, 0, 1, 1, -1, -1};
 	static int[] dyArr = {0, 1, 0 , -1, 1, -1, -1, 1};
 	public static void main(String[] args) throws IOException {
@@ -46,15 +45,15 @@ public class baek10711 {
 				{
 					int nx = i + dxArr[k];
 					int ny = j + dyArr[k];
-					if(map[nx][ny] == 0) del[i][j]++; 
+					if(map[nx][ny] == 0) del[0][i][j]++; // 모래성이 무너짐 합산 
 				}
-				if(del[i][j] >= map[i][j] ) {
+				if(del[0][i][j] >= map[i][j] ) {
 					que.add(new Node(i,j));
+					del[1][i][j] = 1; // 지웠다라는 표시 
 				}
 			}
 		}
-		debug();
-		System.out.println();
+		
 		solve();
 		
 		System.out.println(ans);
@@ -62,34 +61,31 @@ public class baek10711 {
 	public static void solve()
 	{
 		int len =0, min=0;
-		
 		while(!que.isEmpty())
 		{
-			min++;
 			len = que.size();
-			for(int i=0; i< len; i++)
+			min++;
+			for(int i=0; i<len; i++)
 			{
 				Node n = que.poll();
-				System.out.println(n.dx + " " + n.dy);
 				
 				for(int k=0; k<8; k++)
 				{
 					int nx = n.dx + dxArr[k];
 					int ny = n.dy + dyArr[k];
+					if(map[nx][ny] == 0 || del[1][nx][ny] == 1) continue;
 					
-					if(map[nx][ny] > 0) del[nx][ny]++;
-					if(map[nx][ny] > 0 && del[nx][ny] >= map[nx][ny]) {
+					if(map[nx][ny] > 0 && del[1][nx][ny] == 0) del[0][nx][ny]++;
+					if(map[nx][ny] > 0 && del[0][nx][ny] >= map[nx][ny])
+					{
 						que.add(new Node(nx, ny));
+						del[1][nx][ny] = 1;
 					}
 				}
-				
-				
+				map[n.dx][n.dy] = 0;
 			}
-			
-			//debug();
-			System.out.println();
 		}
-		ans = min;
+		ans= min;
 	}
 	public static void debug()
 	{
