@@ -10,9 +10,9 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 /**
- * 미생물 격리 
+ * 미생물 격리 ! 
  */
-public class baek2382 {
+public class swExpert2382 {
 
 	static int N, M, K, ans;
 	static int[][][] map = new int[2][105][105];
