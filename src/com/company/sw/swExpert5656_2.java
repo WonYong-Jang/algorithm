@@ -10,9 +10,9 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 /**
- * 벽돌 깨기 
+ * 벽돌 깨기 ! 
  */
-public class baek5656 {
+public class swExpert5656_2 {
 
 	static int N, H, W, ans;
 	static int[][] map = new int[20][20];
