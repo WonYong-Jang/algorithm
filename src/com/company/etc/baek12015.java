@@ -42,9 +42,8 @@ public class baek12015 {
 		System.out.println(size);
 	}
 	public static int lower_bound(int s, int e, int target) // target 보다 같거나 큰 값을 찾는 과정
-	{
-		// dp(1, 2, 5) 이고 target = 4 일때는 가장 끝값인 e 인덱스를 변경할수 있으므로 1, 2, 4 
-		int mid =0, result = e;
+	{ 
+		int mid =0, result = 0;
 		while(s <= e)
 		{
 			mid = (s + e) / 2;
