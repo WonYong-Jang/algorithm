@@ -3,6 +3,8 @@ package com.company.etc;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.StringTokenizer;
 
 /**
@@ -15,7 +17,7 @@ public class baek14003 {
 	static int[] data = new int[max_node];
 	static int[] dp = new int[max_node];
 	static Node[] ans = new Node[max_node];
-	static int[] prev = new int[max_node];
+	static Deque<Integer> que = new ArrayDeque<>();
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -46,6 +48,19 @@ public class baek14003 {
 			}
 		}
 		System.out.println(size);
+		for(int i = N; i > 0; i--)
+		{
+			if(size == ans[i].idx)
+			{
+				que.addLast(ans[i].num);
+				size--;
+			}
+		}
+		while(!que.isEmpty())
+		{
+			int num = que.pollLast();
+			System.out.print(num+" ");
+		}
 	}
 	public static int lower_bound(int s, int e, int target)
 	{
@@ -66,10 +81,10 @@ public class baek14003 {
 		}
 		return result;
 	}
-	static class Node{
-		int num, idx;
+	static class Node {
+		int idx,num;
 		Node(int a, int b){
-			num=a; idx=b;
+			idx=a;num=b;
 		}
 	}
 }
