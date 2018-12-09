@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
 /**
  * 가장 긴 증가하는 부분 수열 5
  */
-public class baek14003 {
+public class baek14003 { 
 
 	static int N, size;
 	static final int max_node = 1000005;
