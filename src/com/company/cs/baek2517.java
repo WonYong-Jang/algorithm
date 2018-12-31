@@ -8,45 +8,55 @@ import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
 /**
- * Counting Inversions
+ * 달리기 
  */
-public class baek10090 {
+public class baek2517 {
 
 	static int N;
 	static long result;
-	static int[] data = new int[1000005];
-	static int[] temp = new int[1000005];
+	static final int max_node = 1000005;
+	static Node[] data = new Node[max_node];
+	static Node[] temp = new Node[max_node];
+	static int[] ans = new int[max_node];
+	
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		N = Integer.parseInt(st.nextToken());
-		result =0;
-		st = new StringTokenizer(br.readLine());
+		int num =0, rank =0;
 		for(int i=1; i<= N; i++)
 		{
-			data[i] = Integer.parseInt(st.nextToken());
+			st = new StringTokenizer(br.readLine());
+			num = Integer.parseInt(st.nextToken());
+			data[i] = new Node(num, i);
+			ans[i] = 1;
 		}
 		mergeSort(1, N);
 		
-		System.out.println(result);
+		for(int i=1; i<= N; i++)
+		{
+			bw.write(ans[i]+"\n");
+		}
+		bw.flush();
+		
 	}
 	public static void merge(int left, int mid, int right)
 	{
 		for(int i=left; i<= right; i++) temp[i] = data[i];
-		
-		int i=0, j=0, k=0;
+		int i, j, k;
 		i = k = left;
 		j = mid+1;
 		
-		while(i <= mid && j <= right)
+		while(i<= mid && j <= right)
 		{
-			if(temp[i] <= temp[j]) data[k++] = temp[i++];
-			else // Inversions 발생 
+			if(temp[i].num <= temp[j].num) data[k++] = temp[i++];
+			else
 			{
-				data[k++] = temp[j++];
-				result += ( mid-i+1 ); // inversion count 
+				int cnt = mid- i + 1;
+				ans[temp[j].rank] += cnt;
+				data[k++] = temp[j++]; 
 			}
 		}
 		
@@ -55,13 +65,19 @@ public class baek10090 {
 	}
 	public static void mergeSort(int left, int right)
 	{
-		int mid = 0;
+		int mid =0;
 		if(left < right)
 		{
 			mid = (left + right) / 2;
 			mergeSort(left, mid);
 			mergeSort(mid+1, right);
 			merge(left, mid, right);
+		}
+	}
+	static class Node {
+		int num, rank;
+		Node(int a, int b) {
+			num=a; rank=b;
 		}
 	}
 }
