@@ -1,8 +1,10 @@
 package com.company.cs;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
@@ -12,14 +14,15 @@ import java.util.StringTokenizer;
 public class baek7453 {
 
 	static final int max_node = 4001*4002;
-	static int N;
+	static int N, left, right;
 	static long result;
-	static long[][] data = new long[4005][5];
-	static long[] A = new long[max_node];
-	static long[] B = new long[max_node];
+	static int[][] data = new int[4005][5];
+	static int[] A = new int[max_node];
+	static int[] B = new int[max_node];
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		N = Integer.parseInt(st.nextToken());
 		
@@ -28,7 +31,7 @@ public class baek7453 {
 			st = new StringTokenizer(br.readLine());
 			for(int j=1; j<= 4; j++)
 			{
-				data[i][j] = Long.parseLong(st.nextToken());
+				data[i][j] = Integer.parseInt(st.nextToken());
 			}
 		}
 
@@ -43,42 +46,43 @@ public class baek7453 {
 				index++;
 			}
 		}
+		Arrays.sort(A, 1, index);
 		Arrays.sort(B, 1, index);
+		left = 1; right = index-1;
+		N = index -1;
 		
-		long target =0, cnt =0;
-		for(int i=1; i< index; i++)
+		int sum = 0, temp =0;
+		int cntA=0, cntB =0;
+		while(left <= N && right >= 1)
 		{
-			target = A[i] * -1;
-			cnt = upper_bound(1, index, target) - lower_bound(1, index, target);
-			result += cnt;
+			sum = A[left] + B[right];
+			if(sum == 0 )
+			{
+				cntA=0; cntB =0;
+				temp = A[left];
+				while(left <= N && temp == A[left]) {
+					left++;
+					cntA++;
+				}
+				
+				temp = B[right];
+				while(right >= 1 && temp == B[right]) {
+					right--;
+					cntB++;
+				}
+				
+				result += (long)cntA*cntB;
+			}
+			else if( sum > 0) {
+				temp = B[right];
+				while(right >= 1 && temp == B[right]) right--;
+			}
+			else if( sum < 0) {
+				temp = A[left];
+				while(left <= N && temp == A[left]) left++;
+			}
 		}
-		
 		System.out.println(result);
 	}
-	public static int lower_bound(int s, int e, long target)
-	{
-		int mid = 0;
-		while(s < e)
-		{
-			mid = (s + e) / 2;
-			if(B[mid] < target) {
-				s = mid + 1;
-			}
-			else e = mid;
-		}
-		return e;
-	}
-	public static int upper_bound(int s, int e, long target)
-	{
-		int mid = 0;
-		while(s < e)
-		{
-			mid = (s + e) / 2;
-			if(B[mid] <= target) {
-				s = mid + 1;
-			}
-			else e = mid;
-		}
-		return e;
-	}
+	
 }
