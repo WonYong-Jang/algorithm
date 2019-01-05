@@ -24,6 +24,7 @@ public class baek5719 {
 	static PriorityQueue<Node> que = new PriorityQueue<>(new mySort());
 	static Queue<Node> del = new LinkedList<Node>();
 	static int[] dis = new int[505];
+	static int[][] map = new int[505][505];
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -37,13 +38,15 @@ public class baek5719 {
 			M = Integer.parseInt(st.nextToken());
 			if(N ==0 && M == 0) break;
 			minDis = 0;
-			que.clear();
 			adj.clear(); rAdj.clear();
 			for(int i=0; i< N; i++)
 			{
 				adj.add(new ArrayList<>());
 				rAdj.add(new ArrayList<>());
 				dis[i] = INF;
+				for(int j=0; j< N; j++) {
+					map[i][j] = 0;
+				}
 			}
 			
 			st = new StringTokenizer(br.readLine());
@@ -64,26 +67,19 @@ public class baek5719 {
 			dijkstra(start, end);
 			solve(start, end);
 			
-			for(int i=0; i< N; i++)
-			{
-				System.out.print(dis[i] + " ");
-			}
-			System.out.println();
-			
-			for(int i=0; i< N; i++) {
-				if(dis[i] != -1) dis[i] = INF;
-			}
-			
+			for(int i=0; i< N; i++) dis[i] = INF;
 			
 			dijkstra(start, end);
 			
-			
-			System.out.println("// "+minDis);
+			if(minDis == INF ) bw.write("-1\n");
+			else bw.write(minDis+"\n");
+			bw.flush();
 		}
 	}
 	public static void dijkstra(int s, int e)
 	{
 		dis[s] = 0;
+		que.clear();
 		que.add(new Node(s,0));
 		while(!que.isEmpty())
 		{
@@ -93,7 +89,7 @@ public class baek5719 {
 			
 			for(Node next : adj.get(n.dx))
 			{
-				if(dis[next.dx] == -1) continue;
+				if(map[n.dx][next.dx] == -1) continue;
 				if(dis[next.dx] > next.cost + dis[n.dx])
 				{
 					dis[next.dx] = next.cost + dis[n.dx];
@@ -105,6 +101,7 @@ public class baek5719 {
 	}
 	public static void solve(int s, int e) // 최단거리로 가는 정점 지워주기 
 	{
+		del.clear();
 		del.add(new Node(e, minDis));
 		while(!del.isEmpty())
 		{
@@ -112,11 +109,11 @@ public class baek5719 {
 			
 			for(Node next : rAdj.get(n.dx))
 			{
-				if(next.dx == s || next.dx == e) continue;
+				if( next.dx == e) continue;
 				if(n.cost == next.cost + dis[next.dx])
 				{
 					del.add(new Node(next.dx, dis[next.dx]));
-					dis[next.dx] = -1;
+					map[next.dx][n.dx] = -1;
 				}
 			}
 		}
