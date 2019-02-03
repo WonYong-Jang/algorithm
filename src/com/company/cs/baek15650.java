@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-public class baek15649 {
+public class baek15650 {
 
 	static int N, M;
 	static int[] output = new int[9];
@@ -38,7 +38,7 @@ public class baek15649 {
 			return;
 		}
 		
-		for(int i=1; i<= N; i++)
+		for(int i=cur+1; i<= N; i++)
 		{
 			if(visit[i] == 1) continue;
 			visit[i] = 1;
