@@ -12,8 +12,7 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-	static final int mod = 10007;
-	static int N, K;
+	static int N;
 	static int[][] dp = new int[1002][1002];
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
@@ -21,19 +20,20 @@ public class Main {
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		N = Integer.parseInt(st.nextToken());
-		K = Integer.parseInt(st.nextToken());
-		for(int i=0; i<= N; i++) 
+		
+		for(int diagonal = 0; diagonal < N; diagonal++)
 		{
-			dp[i][0] = 1; dp[i][i] = 1;
-		}
-		for(int i=1; i<= N; i++)
-		{
-			for(int j=1; j<= min(N, K); j++)
+			for(int i =1; i <= N - diagonal; i++)
 			{
-				dp[i][j] = (dp[i-1][j] + dp[i-1][j-1]) % mod;
+				int j = i + diagonal;
+				if(i == j) {
+					dp[i][j] = 0;
+					continue;
+				}
+				
 			}
 		}
-		System.out.println(dp[N][K]);
+		
 	}
 	public static int min(int a, int b) { return a > b ? b : a; }
 }
