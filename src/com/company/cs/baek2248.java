@@ -49,6 +49,7 @@ public class baek2248 {
 		if(m == 0)
 		{
 			for(int i=0; i< n; i++) result += '0';
+			return;
 		}
 		
 		long target = dp[n-1][m];
