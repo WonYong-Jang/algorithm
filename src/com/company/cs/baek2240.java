@@ -35,6 +35,7 @@ public class baek2240 {
 				}
 				else 
 				{
+					if(i==1 && j==1) continue;
 					dp[i][j][1] = max(dp[i-1][j][1], dp[i-1][j-1][2]);
 					dp[i][j][2] = max(dp[i-1][j][2], dp[i-1][j-1][1]) + 1;
 				}
