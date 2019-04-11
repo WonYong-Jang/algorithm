@@ -28,7 +28,7 @@ public class baek1328 {
 			{
 				for(int k=1; k<= N; k++)
 				{
-					dp[i][j][k] = (dp[i-1][j-1][k] + dp[i-1][j][k-1] + dp[i-1][j][k]*(N-2)) % mod;
+					dp[i][j][k] = (dp[i-1][j-1][k] + dp[i-1][j][k-1] + dp[i-1][j][k]*(i-2)) % mod;
 				}
 			}
 		}
