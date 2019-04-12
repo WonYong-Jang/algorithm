@@ -20,12 +20,12 @@ public class baek7579 {
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 		st = new StringTokenizer(br.readLine());
-		for(int i=1; i<=5; i++)
+		for(int i=1; i<=N; i++)
 		{
 			memory[i] = Integer.parseInt(st.nextToken());
 		}
 		st = new StringTokenizer(br.readLine());
-		for(int i=1; i<=5; i++)
+		for(int i=1; i<=N; i++)
 		{
 			cost[i] = Integer.parseInt(st.nextToken());
 		}
