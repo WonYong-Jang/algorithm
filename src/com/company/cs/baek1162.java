@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 /**
@@ -15,7 +13,7 @@ import java.util.StringTokenizer;
  */
 public class baek1162 {
 
-	static final long INF = 987654321;
+	static final long INF = 50005000000L;
 	static int N, M, K;
 	static long[][] dis = new long[10001][21];
 	static PriorityQueue<Node> que = new PriorityQueue<>(new mySort());
@@ -66,11 +64,9 @@ public class baek1162 {
 		{
 			Node n = que.poll();
 			
-			if(n.cost > dis[n.dx][n.cnt]) continue;
-			//if(n.dx == N) continue;
+			//if(n.cost > dis[n.dx][n.cnt]) continue;
 			
 			int count = n.cnt;
-			if(count > K) break;
 			
 			for(Node next : adj.get(n.dx))
 			{
