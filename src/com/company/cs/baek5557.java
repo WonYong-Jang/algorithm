@@ -9,7 +9,7 @@ public class baek5557 {
 
 	static int N;
 	static int[] data = new int[105];
-	static int[][] dp = new int[105][25];
+	static long[][] dp = new long[105][25];
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
