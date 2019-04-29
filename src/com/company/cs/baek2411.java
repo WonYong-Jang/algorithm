@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.StringTokenizer;
-
+/** 
+ * 아이템 먹기 
+ */
 public class baek2411 {
 
 	static int N, M, A, B;
