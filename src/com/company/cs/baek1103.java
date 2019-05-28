@@ -54,14 +54,15 @@ public class baek1103 {
 		else
 		{
 			int num =0, jump = data[dx][dy];
-			
+			visit[dx][dy] = 1;
 			for(int i=0; i<4; i++)
 			{
-				int rdx = dx + dxArr[i]*jump;
-				int rdy = dy + dyArr[i]*jump;
+				int rdx = dx + (dxArr[i]*jump);
+				int rdy = dy + (dyArr[i]*jump);
 				
 				num = max(num, solve(rdx,rdy) + 1);
 			}
+			visit[dx][dy] = 0;
 			return dp[dx][dy] = num;
 		}
 	}
