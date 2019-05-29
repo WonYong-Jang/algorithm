@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Stack;
 import java.util.StringTokenizer;
 
 /**
@@ -18,6 +19,7 @@ public class baek2228 {
 	static int[] sum = new int[105];
 	static int[][] dp = new int[105][105];
 	static int[][] check = new int[105][105];
+	static Stack<Node> stack = new Stack<>();
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -38,7 +40,9 @@ public class baek2228 {
 			data[i] = Integer.parseInt(st.nextToken());
 			sum[i] = (sum[i-1]+ data[i]);
 		}
+		
 		System.out.println(solve(1,0));
+		
 	}
 	public static int solve(int cur, int cnt)
 	{
@@ -57,13 +61,14 @@ public class baek2228 {
 			return dp[cur][cnt] = ret;
 		}
 	}
+	static class Node {
+		int cur, cnt;
+		Node(int a, int b) {
+			cur=a; cnt=b;
+		}
+	}
 	public static int max(int a, int b) { return a > b ? a : b; }
 }
-
-
-
-
-
 
 
 
