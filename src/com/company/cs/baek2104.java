@@ -8,7 +8,7 @@ import java.util.StringTokenizer;
 public class baek2104 {
 
 	static long result = 0;
-	static int N, start, end;
+	static int N, start, end, rStart, rEnd;
 	static long[] sumTree = new long[100001*4];
 	static int[] minTree = new int[100001*4];
 	static int[] data = new int[100005];
@@ -20,7 +20,7 @@ public class baek2104 {
 		start=1;
 		while(N > start) start *= 2;
 		end = start + N - 1;
-		
+		rStart = 1; rEnd = N;
 		st = new StringTokenizer(br.readLine());
 		for(int i=1; i<= N; i++)
 		{
@@ -46,6 +46,7 @@ public class baek2104 {
 		
 		solve(1, N);
 		System.out.println(result);
+		System.out.println(rStart + " " + rEnd);
 	}
 	public static void solve(int sdx, int edx)
 	{
@@ -54,7 +55,14 @@ public class baek2104 {
 		
 		long sum = sumQuery(sdx,edx);
 		int index = query(sdx, edx);
-		result = max(result, sum*(long)data[index]);
+		long tmp = sum*(long)data[index];
+		if(result < tmp)
+		{
+			result = tmp;
+			rStart = sdx;
+			rEnd = edx;
+		}
+		
 		
 		solve(sdx, index-1);
 		solve(index+1, edx);
