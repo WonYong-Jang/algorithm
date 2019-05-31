@@ -10,29 +10,55 @@ import java.util.StringTokenizer;
 public class Main {
 
 	static int N;
-	static int[] dp = new int[10005];
-	static int[] data = new int[10005];
+	static int[] dp = new int[100005];
+	static int[] data = new int[100005];
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken());
-		for(int i=1; i<= N; i++)
+		StringTokenizer st;
+		String str = "";
+		while((str = br.readLine())!= null)
 		{
-			st = new StringTokenizer(br.readLine());
-			data[i] = Integer.parseInt(st.nextToken());
+			N = Integer.parseInt(str.trim());
+       		st = new StringTokenizer(br.readLine().trim());
+			for(int i=1; i<= N; i++)
+			{
+				data[i] = Integer.parseInt(st.nextToken());
+				dp[i] = 0;
+			}
+			
+			dp[1] = 0;
+			int size = 0;
+			for(int i=1; i<= N; i++)
+			{
+				if(dp[size] < data[i]) {
+					dp[++size] = data[i];  
+				}
+				else {
+					int idx = lower_bound(1,size+1, data[i]);
+					dp[idx] = data[i];
+				}
+			}
+			bw.write(size+"\n");
 		}
-		
-		dp[1] = data[1];
-		dp[2] = data[2] + data[1];
-		for(int i=3; i<= N; i++)
-		{
-			dp[i] = max(dp[i], data[i]+data[i-1]+dp[i-3]);
-			dp[i] = max(dp[i], data[i] + dp[i-2]);
-			dp[i] = max(dp[i], dp[i-1]);
-		}
-		System.out.println(dp[N]);
+		bw.flush();
 	}
-	public static int max(int a, int b) { return a > b ? a : b; }
+	public static int lower_bound(int s, int e, int target)
+	{
+		int mid = 0;
+		
+		while(s < e)
+		{
+			mid = (s + e) / 2;
+			if(dp[mid] < target) {
+				s = mid + 1;
+			}
+			else {
+				e = mid;
+			}
+		}
+		return e;
+	}
+	public static int max(int a, int b) { return a > b ? a : b ;}
 }
