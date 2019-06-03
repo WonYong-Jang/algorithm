@@ -9,23 +9,51 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-	static final int mod = 9901;
-	static int N;
-	static long[][] dp = new long[100005][3];
+	static int N, M;
+	static int[] order = new int[1005];
+	static int[][][] dp = new int[1005][3][35];
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		N = Integer.parseInt(st.nextToken());
-		dp[0][0] = 0; dp[0][1] = 0; dp[0][2] = 1;
+		M = Integer.parseInt(st.nextToken());
+		for(int i = 1; i <= N; i++)
+		{
+			st = new StringTokenizer(br.readLine());
+			order[i] = Integer.parseInt(st.nextToken());
+		}
 		for(int i=1; i<= N; i++)
 		{
-			dp[i][0] = (dp[i-1][1] + dp[i-1][2]) % mod;
-			dp[i][1] = (dp[i-1][0] + dp[i-1][2]) % mod;
-			dp[i][2] = (dp[i-1][0] + dp[i-1][1] + dp[i-1][2]) % mod;
+			for(int j=0; j<= M; j++)
+			{
+				if(order[i] == 1)
+				{
+					dp[i][1][j] = max(dp[i-1][1][j], dp[i-1][2][j+1]) + 1;
+					dp[i][2][j] = max(dp[i-1][2][j], dp[i-1][1][j+1]);
+				}
+				else if(order[i] == 2)
+				{
+					dp[i][1][j] = max(dp[i-1][1][j], dp[i-1][2][j+1]);
+					dp[i][2][j] = max(dp[i-1][2][j], dp[i-1][1][j+1]) + 1;
+				}
+			}
 		}
-		long result = (dp[N][0] + dp[N][1] + dp[N][2]) % mod;
+		
+		int result = 0;
+		for(int i=0; i<= M; i++)
+		{
+			result = max(result, max( dp[N][2][i], dp[N][1][i] ));
+		}
 		System.out.println(result);
+		
 	}
-	public static int max(int a, int b) { return a > b ? a : b ;}
+	public static int max(int a, int b) { return a > b ? a : b; }
 }
+
+
+
+
+
+
+
