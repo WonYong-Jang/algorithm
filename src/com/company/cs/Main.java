@@ -1,10 +1,8 @@
 package com.company.cs;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -29,13 +27,20 @@ public class Main {
 			{
 				if(order[i] == 1)
 				{
-					dp[i][1][j] = max(dp[i-1][1][j], dp[i-1][2][j+1]) + 1;
-					dp[i][2][j] = max(dp[i-1][2][j], dp[i-1][1][j+1]);
+					if( j  > 0 ) dp[i][1][j] = max(dp[i][1][j], dp[i-1][2][j-1] + 1);
+					dp[i][1][j] = max(dp[i][1][j], dp[i-1][1][j] + 1);
+					
+					dp[i][2][j] = max(dp[i][2][j], dp[i-1][2][j]);
+					dp[i][2][j] = max(dp[i][2][j], dp[i-1][1][j]);
+					
 				}
 				else if(order[i] == 2)
 				{
-					dp[i][1][j] = max(dp[i-1][1][j], dp[i-1][2][j+1]);
-					dp[i][2][j] = max(dp[i-1][2][j], dp[i-1][1][j+1]) + 1;
+					if( j > 0 )dp[i][1][j] = max(dp[i][1][j], dp[i-1][2][j-1]);
+					dp[i][1][j] = max(dp[i][1][j], dp[i-1][1][j]);
+					
+					dp[i][2][j] = max(dp[i][2][j], dp[i-1][2][j] + 1);
+					dp[i][2][j] = max(dp[i][2][j], dp[i-1][1][j] + 1);
 				}
 			}
 		}
@@ -53,7 +58,14 @@ public class Main {
 
 
 
-
+/**
+5 4
+2
+1
+2
+1
+2
+ */
 
 
 
