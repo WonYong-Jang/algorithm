@@ -17,12 +17,12 @@ public class baek2166 {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		N = Integer.parseInt(st.nextToken());
-		int dx = 0, dy = 0;
-		for(int i = 0; i < 4; i++)
+		long dx = 0, dy = 0;
+		for(int i = 0; i < N; i++)
 		{
 			st = new StringTokenizer(br.readLine());
-			dx = Integer.parseInt(st.nextToken());
-			dy = Integer.parseInt(st.nextToken());
+			dx = Long.parseLong(st.nextToken());
+			dy = Long.parseLong(st.nextToken());
 			point[i] = new Point(dx,dy);
 		}
 		long result = ccw();
@@ -43,8 +43,8 @@ public class baek2166 {
 		return op;
 	}
 	static class Point {
-		int dx, dy;
-		Point(int a, int b) {
+		long dx, dy;
+		Point(long a, long b) {
 			dx=a; dy=b;
 		}
 	}
