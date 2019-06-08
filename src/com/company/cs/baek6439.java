@@ -81,7 +81,7 @@ public class baek6439 {
 			p1 = new Point(dx1, dy1);
 			p2 = new Point(dx2, dy2);
 			p_min = new Point(min(dx1, dx2), min(dy1, dy2));
-			p_max = new Point(max(dx1, dx2), max(dx1, dy2));
+			p_max = new Point(max(dx1, dx2), max(dy1, dy2));
 		}
 	}
 	static class Point {
