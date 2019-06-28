@@ -13,9 +13,9 @@ public class baek7578 {
 
 	static long result;
 	static final int max_value = 500001;
-	static int N, start, end;
-	static int[] tree = new int[max_value*4];
+	static int N;
 	static int[] map = new int[max_value];
+	static int[] temp = new int[max_value];
 	static HashMap<Integer, Integer> set = new HashMap<>();
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
@@ -23,12 +23,8 @@ public class baek7578 {
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		N = Integer.parseInt(st.nextToken());
 		
-		start = 1;
-		while(N > start) start *= 2;
-		end = start + N -1;
-		
 		result = 0;
-		int num = 0, index = start;
+		int num = 0;
 		st = new StringTokenizer(br.readLine());
 		for(int i=1; i<= N; i++)
 		{
@@ -40,48 +36,41 @@ public class baek7578 {
 		{
 			num = Integer.parseInt(st.nextToken());
 			map[i] = set.get(num);
-			tree[index++] = 1;
 		}
-		
-		for(int i=end/2; i>=1; i--)
-		{
-			tree[i] = tree[i*2] + tree[i*2+1];
-		}
-		
-		long tmp = 0;
-		for(int i=1; i<= N; i++)
-		{
-			tmp = get(1,map[i]-1);
-			set(0, map[i]);
-			result += tmp;
-		}
+		mSort(1, N);
 		System.out.println(result);
 	}
-	public static void set(int num, int sdx)
+	public static void mSort(int s, int e)
 	{
-		int idx = sdx + start - 1;
-		tree[idx] = num;
-		while(idx > 1)
-		{
-			idx/=2;
-			tree[idx] = tree[idx*2] + tree[idx*2+1];
-		}
+		if(s == e) return;
+		
+		int mid = (s+e)/2;
+		mSort(s, mid);
+		mSort(mid+1, e);
+		merge(s,e);
 	}
-	public static long get(int sx, int ex)
+	public static void merge(int s, int e)
 	{
-		long sum = 0;
-		int sdx = start + sx - 1;
-		int edx = start + ex - 1;
-		
-		while(sdx <= edx)
+		for(int i=s; i<=e; i++)
 		{
-			if(sdx % 2 != 0) sum += tree[sdx];
-			if(edx % 2 == 0) sum += tree[edx];
-			
-			sdx = (sdx + 1) / 2;
-			edx = (edx - 1) / 2;
+			temp[i] = map[i];
+		}
+		int i =0, j=0, k=0, mid =0;
+		
+		mid = (s + e) / 2;
+		i = k = s;
+		j = mid+1;
+		
+		while(i <= mid && j <= e)
+		{
+			if(temp[i] <= temp[j]) map[k++] = temp[i++];
+			else {
+				result += (mid-i+1);
+				map[k++] = temp[j++];
+			}
 		}
 		
-		return sum;
+		while(i <= mid) map[k++] = temp[i++];
+		while(j <= e) map[k++] = temp[j++];
 	}
 }
