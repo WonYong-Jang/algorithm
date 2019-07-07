@@ -34,14 +34,10 @@ public class baek14867 {
 		
 		que.add(start);
 		
-		
-		int count = 0;
 		long result = -1;
 		while(!que.isEmpty())
 		{
 			Node n = que.poll();
-			count++;
-			if(count == 100) break;
 			
 			if(n.dx == edx && n.dy == edy)
 			{
