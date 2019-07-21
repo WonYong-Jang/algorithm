@@ -40,7 +40,7 @@ public class baek10255 {
 			dy1 = Long.parseLong(st.nextToken()); 
 			dx2 = Long.parseLong(st.nextToken()); 
 			dy2 = Long.parseLong(st.nextToken());
-			//target = new Line(-1, -1, 8, 4);
+			
 			target = new Line(dx1, dy1, dx2, dy2);
 			
 			int result = 0;
@@ -48,7 +48,7 @@ public class baek10255 {
 			for(int i=0; i<4; i++)
 			{
 				result = isCross(target, line[i]);
-				System.out.println(result);
+				
 				if(result == 4)
 				{
 					cnt = result;
@@ -64,26 +64,41 @@ public class baek10255 {
 	}
 	public static int isCross(Line a, Line b)
 	{
-		int ap1 = ccw(a.p1, a.p2, b.p1) * ccw(a.p1, a.p2, b.p2);
-		int ap2 = ccw(b.p1, b.p2, a.p1) * ccw(b.p1, b.p2, a.p2);
+		int ap1 = ccw(a.p1, a.p2, b.p1);
+		int ap2 = ccw(a.p1, a.p2, b.p2);
+		int ap3 = ccw(b.p1, b.p2, a.p1);
+		int ap4 = ccw(b.p1, b.p2, a.p2);
 		
-		if(ap1 == 0 && ap2 == 0)
+		if(ap1 == 0 && ap2 == 0 && ap3 == 0 && ap4 ==0 )
 		{
 			if(a.p_max.dx < b.p_min.dx ||
 				a.p_max.dy < b.p_min.dy ||
 				b.p_max.dx < a.p_min.dx ||
 				b.p_max.dy < a.p_min.dy) return 0;
+			else if(a.p_max.dx == b.p_min.dx && a.p_max.dy == b.p_min.dy) return 2;
+			else if(b.p_max.dx == a.p_min.dx && b.p_max.dy == a.p_min.dy) return 2;
+			else return 4;
 		}
-		if(ap1 == 0 && ap2 == 0) return 4;
 		
-		else if(ap1 <= 0 && ap2 <= 0) return 1;
+		if(search(a.p1, a.p2, b.p1) || search(a.p1, a.p2, b.p2))
+		{
+			return 2;
+		}
+		
+		if(ap1*ap2 <= 0 && ap3*ap4 <= 0) return 1;
 		else return 0;
 	}
-	public static boolean search(Point a, Point b, Point t)
+	public static boolean search(Point a, Point b, Point t) // a ~ b 사이에 점 t 가 있는지를 검사 
 	{
-		long op1 = (t.dy- a.dy)*(b.dx-a.dy);
-		long op2 = (b.dy - a.dy)*(t.dx-a.dx);
-		if(op1 == op2) return true;
+		long op1 = (a.dy- t.dy)*(b.dx-a.dx);
+		long op2 = (b.dy - a.dy)*(a.dx-t.dx);
+		
+		long dx1 = min(a.dx, b.dx);
+		long dx2 = max(a.dx, b.dx);
+		long dy1 = min(a.dy, b.dy);
+		long dy2 = max(a.dy, b.dy);
+		
+		if(op1 == op2 && dx1 <= t.dx && t.dx <= dx2 && dy1 <= t.dy && t.dy <= dy2) return true;
 		else return false;
 	}
 	public static int ccw(Point a, Point b, Point c)
