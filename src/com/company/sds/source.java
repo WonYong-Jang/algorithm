@@ -1,5 +1,7 @@
 package com.company.sds;
-
+/**
+ * 기판 설계 
+ */
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -13,10 +15,10 @@ import java.util.StringTokenizer;
 
 public class source {
 
-	static int N, total, maxCrossCnt, minResult;
+	static int N, totalGroup, maxCrossCnt, minGroupResult;
 	static Line[] line = new Line[2005];
 	static Node[] par = new Node[2005];
-	static HashSet<Integer> set = new HashSet<>(); // 그룹의 대표값 
+	static HashSet<Integer> set = new HashSet<>(); // 그룹의 부모 대표값 
 	static ArrayList<Integer> ans = new ArrayList<>();
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
@@ -29,7 +31,7 @@ public class source {
 		{
 			st = new StringTokenizer(br.readLine());
 			N = Integer.parseInt(st.nextToken());
-			total = N; maxCrossCnt = 0;
+			totalGroup = N; maxCrossCnt = 0;
 			set.clear(); ans.clear();
 			for(int i=1; i<= N; i++)
 			{
@@ -42,80 +44,71 @@ public class source {
 				par[i] = new Node(i);
 				par[i].dx1 = dx1; par[i].dy1 = dy1; par[i].dx2 = dx2; par[i].dy2 = dy2;
 			}
-			int ap1 = 0, ap2 = 0, value = 0;
-			for(int i=1; i< N; i++)
+			
+			for(int i = 1; i < N; i++)
 			{
-				for(int j=i+1; j<= N; j++)
+				for(int j= i + 1; j <= N; j++)
 				{
 					if(isCross(line[i], line[j]))
 					{
-						ap1 = find(i);
-						ap2 = find(j);
+						int ap1 = find(i);
+						int ap2 = find(j);
 						if(ap1 != ap2)
 						{
-							total--;
-							union(i, j);
+							union(ap1,ap2);
+							totalGroup--;
 						}
 					}
-					
 				}
-			}
-			for(int i=1; i<= N; i++)
-			{
-				value = find(i);
-				set.add(value);
-				if(par[i].crossCnt > maxCrossCnt) maxCrossCnt = par[i].crossCnt;
-			}
-			ans.addAll(set);
-			int len = ans.size();
-			int tmpCnt = 0, target = 0;
-			minResult = len;
-			for(int i=0; i< len ; i++)
-			{
-				value = ans.get(i);
-				dx1 = par[value].dx1;
-				dy1 = par[value].dy1;
-				dx2 = par[value].dx2;
-				dy2 = par[value].dy2;
-				System.out.println(dx1+" "+dx2+" "+ dy1 + " "+ dy2 + " // " + par[value].crossCnt);
-				tmpCnt = len;
-				for(int j=0; j< len; j++) // dx1
-				{
-					if(i==j) continue;
-					target = ans.get(j);
-					if(par[target].dx1 <= dx1 && dx1 <= par[target].dx2) tmpCnt--;
-				}
-				if(minResult > tmpCnt) minResult = tmpCnt;
-				tmpCnt = len;
-				
-				for(int j=0; j< len; j++) // dx2
-				{
-					if(i==j) continue;
-					target = ans.get(j);
-					if(par[target].dx1 <= dx2 && dx2 <= par[target].dx2) tmpCnt--;
-				}
-				if(minResult > tmpCnt) minResult = tmpCnt;
-				tmpCnt = len;
-				
-				for(int j=0; j< len; j++) // dy1
-				{
-					if(i==j) continue;
-					target = ans.get(j);
-					if(par[target].dy1 <= dy1 && dy1 <= par[target].dy2) tmpCnt--;
-				}
-				if(minResult > tmpCnt) minResult = tmpCnt;
-				tmpCnt = len;
-				
-				for(int j=0; j< len; j++) // dy2
-				{
-					if(i==j) continue;
-					target = ans.get(j);
-					if(par[target].dy1 <= dy2 && dy2 <= par[target].dy2) tmpCnt--;
-				}
-				if(minResult > tmpCnt) minResult = tmpCnt;
 			}
 			
-			bw.write("#"+k+" "+set.size()+" "+maxCrossCnt +" " +minResult+"\n");
+			for(int i=1; i<= N; i++)
+			{
+				find(i);
+				set.add(par[i].order);
+				if(maxCrossCnt < par[i].crossCnt)
+				{
+					maxCrossCnt = par[i].crossCnt;
+				}
+			}
+			
+			ans.addAll(set);
+			long resultCnt = 0;
+			for(int i=0; i< ans.size(); i++)
+			{
+				int num = ans.get(i);
+				dx1 = par[num].dx1;
+				dx2 = par[num].dx2;
+				dy1 = par[num].dy1;
+				dy2 = par[num].dy2;
+				
+				long dx1Cnt = 0, dx2Cnt =0, dy1Cnt =0, dy2Cnt =0;
+				for(int j=0; j< ans.size(); j++)
+				{
+					int target = ans.get(j);
+					long rdx1 = par[target].dx1;
+					long rdx2 = par[target].dx2;
+					long rdy1 = par[target].dy1;
+					long rdy2 = par[target].dy2;
+					
+					if(rdx1 <= dx1 && dx1 <= rdx2) dx1Cnt++;
+					//if(rdy1 <= dx1 && dx1 <= rdy2) dx1Cnt++;
+					
+					if(rdx1 <= dx2 && dx2 <= rdx2) dx2Cnt++;
+					//if(rdy1 <= dx2 && dx2 <= rdy2) dx2Cnt++;
+					
+					//if(rdx1 <= dy1 && dy1 <= rdx2) dy1Cnt++;
+					if(rdy1 <= dy1 && dy1 <= rdy2) dy1Cnt++;
+					
+					//if(rdx1 <= dy2 && dy2 <= rdx2) dy2Cnt++;
+					if(rdy1 <= dy2 && dy2 <= rdy2) dy2Cnt++;
+				}
+				
+				resultCnt = max( max(dx1Cnt,dx2Cnt) , max(dy1Cnt,dy2Cnt) );
+				
+			}
+			System.out.println(resultCnt);
+			bw.write("#"+k+" "+totalGroup + " " + maxCrossCnt+"\n");
 		}
 		bw.flush();
 	}
@@ -123,24 +116,20 @@ public class source {
 	{
 		int ap1 = find(a);
 		int ap2 = find(b);
-		par[ap1].order = par[ap2].order;
+		par[ap1].order = ap2; // ap1 -> ap2 가리키도록 설정 (대표값)
+		
 	}
 	public static int find(int a)
 	{
 		if(par[a].order == a) return a;
 		else 
 		{
-			long dx1 = par[a].dx1;
-			long dy1 = par[a].dy1;
-			long dx2 = par[a].dx2;
-			long dy2 = par[a].dy2;
-			
-			par[par[a].order].dx1 = min(par[par[a].order].dx1 ,dx1);
-			par[par[a].order].dx2 = max(par[par[a].order].dx2 ,dx2);
-			par[par[a].order].dy1 = min(par[par[a].order].dy1 ,dy1);
-			par[par[a].order].dy2 = max(par[par[a].order].dy2, dy2);
 			par[par[a].order].crossCnt += par[a].crossCnt;
 			par[a].crossCnt = 0;
+			par[par[a].order].dx1 = min(par[par[a].order].dx1, par[a].dx1);
+			par[par[a].order].dy1 = min(par[par[a].order].dy1, par[a].dy1);
+			par[par[a].order].dx2 = max(par[par[a].order].dx2, par[a].dx2);
+			par[par[a].order].dy2 = max(par[par[a].order].dy2, par[a].dy2);
 			return par[a].order = find(par[a].order);
 		}
 	}
@@ -157,7 +146,7 @@ public class source {
 		}
 		return (ap1 <= 0 && ap2 <= 0);
 	}
-	static class Node {
+	static class Node { // group 
 		long dx1, dy1, dx2, dy2;
 		int order, crossCnt;
 		Node(int a) {
