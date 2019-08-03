@@ -15,103 +15,131 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-	static final int INF = 987654321;
-	static int N;
-	static Point[] p = new Point[500005];
-	static ArrayList<Point> arr = new ArrayList<>();
+	static final int max_value = 300000;
+	static int N ,K;
+	static int[] tree = new int[max_value*4+5];
+	static Node[] data = new Node[max_value+5];
+	static Point[] q = new Point[max_value+5];
+	static int[] ans = new int[max_value+5];
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken());
-		int dx=0, dy =0;
-		for(int i=1; i<= N; i++)
+		int testCase = Integer.parseInt(st.nextToken());
+		for(int k=1; k<= testCase; k++)
 		{
 			st = new StringTokenizer(br.readLine());
-			dx = Integer.parseInt(st.nextToken());
-			dy = Integer.parseInt(st.nextToken());
-			p[i] = new Point(dx,dy);
-		}
-		Arrays.sort(p, 1, N+1, new xSort());
-		int result = solve(1, N);
-		bw.write(result+"\n");
-		bw.flush();
-	}
-	public static int solve(int start, int end)
-	{
-		int mid = (start + end) / 2, result = INF;
-		
-		if( (end-start+1) <= 2)
-		{
-			result = dis(p[start], p[end]);
+			N = Integer.parseInt(st.nextToken());
+			K = Integer.parseInt(st.nextToken());
 			
-			return result;
-		}
-		if( (end-start+1) <= 3)
-		{
-			result = min(dis(p[start], p[mid]) ,min( dis(p[mid], p[end]), dis(p[start], p[end])) );
-			return result;
-		}
-		
-		int d = min( solve(start, mid), solve(mid+1, end) );
-		
-		arr.clear();
-		int t = 0;
-		for(int i=start; i<= end; i++)
-		{
-			t = (p[mid].dx-p[i].dx)*(p[mid].dx-p[i].dx);
-			if(t < d)
+			for(int i=1; i<= N*4; i++) tree[i] = 0;
+			
+			st = new StringTokenizer(br.readLine());
+			int left = 0, right = 0, num = 0;
+			for(int i=1; i<= N; i++)
 			{
-				arr.add(p[i]);
+				num = Integer.parseInt(st.nextToken());
+				data[i] = new Node(num, i);
+				ans[i] = 0;
 			}
-		}
-		
-		Collections.sort(arr, new ySort());
-		result = d;
-		for(int i=0; i< arr.size()-1; i++)
-		{
-			for(int j=i+1; j< arr.size() && (arr.get(j).dy - arr.get(i).dy) < result; j++)
+			for(int i=1; i<= K; i++)
 			{
-				d = dis(arr.get(j), arr.get(i));
-				if(d < result)
+				st = new StringTokenizer(br.readLine());
+				left = Integer.parseInt(st.nextToken());
+				right = Integer.parseInt(st.nextToken());
+				num = Integer.parseInt(st.nextToken());
+				q[i] = new Point(left, right, num, i);
+			}
+			Arrays.sort(data, 1, N+1, new dSort());
+			Arrays.sort(q, 1, K+1, new qSort());
+			
+			
+			
+			int index = 0, end = N+1;
+			for(int i=1; i<= K; i++)
+			{
+				index = lower_bound(1, N+1, q[i].height);
+				
+				for(int j = index; j < end; j++)
 				{
-					result = d;
+					update(1, 1, N, data[j].index, 1);
 				}
+				int result = get(1, 1, N, q[i].left, q[i].right);
+				
+				end = index;
+				
+				ans[q[i].index] = result;
+			}
+			bw.write("#"+k+" ");
+			for(int i=1; i<= K; i++)
+			{
+				bw.write(ans[i]+" ");
+			}
+			bw.write("\n");
+		}
+		 bw.flush();
+	}
+	public static int get(int node, int start, int end, int i, int j)
+	{
+		int mid = (start + end) / 2;
+		if(end < i || j < start) return 0;
+		else if(i<= start && end <= j) return tree[node];
+		else return get(node*2, start, mid, i, j) + get(node*2+1, mid+1, end, i, j);
+	}
+	public static void update(int node, int start, int end, int index, int num)
+	{
+		if(index < start || end < index) return;
+		tree[node] += num;
+		if(start == end) return;
+		int mid = (start + end) / 2;
+		update(node*2, start, mid, index, num);
+		update(node*2+1, mid+1, end, index, num);
+	}
+	public static int lower_bound(int s, int e, int target)
+	{
+		int mid = 0;
+		
+		while(s < e)
+		{
+			mid = (s + e) / 2;
+			if(data[mid].height <= target) {
+				s = mid + 1;
+			}
+			else {
+				e = mid;
 			}
 		}
-		
-		return result;
+		return e;
 	}
-	public static int dis(Point a, Point b)
-	{
-		return (a.dx-b.dx)*(a.dx-b.dx) + (a.dy-b.dy)*(a.dy-b.dy);
-	}
-	static class xSort implements Comparator<Point>
-	{
+	static class qSort implements Comparator<Point> {
 		@Override
 		public int compare(Point a, Point b) {
-			if(a.dx < b.dx) return -1;
-			else if(a.dx > b.dx) return 1;
+			if(a.height < b.height) return 1;
+			else if(a.height > b.height) return -1;
 			else return 0;
-		}	
+		}
 	}
-	static class ySort implements Comparator<Point>
-	{
+	static class dSort implements Comparator<Node> {
 		@Override
-		public int compare(Point a, Point b) {
-			// TODO Auto-generated method stub
-			if(a.dy < b.dy) return -1;
-			else if(a.dy > b.dy) return 1;
+		public int compare(Node a, Node b) {
+			if(a.height < b.height) return -1;
+			else if(a.height > b.height ) return 1;
 			else return 0;
-		}	
+		}
 	}
-	public static int max(int a, int b) { return a > b ? a: b; }
-	public static int min(int a, int b) { return a > b ? b : a; }
 	static class Point {
-		int dx, dy;
-		Point(int a, int b) {
-			dx=a; dy=b;
+		int left, right, height, index;
+		Point(int a, int b, int c, int d) {
+			left = a; right = b; height = c; index = d;
+		}
+	}
+	static class Node {
+		int height, index;
+		Node(int a, int b) {
+			height = a; index = b; 
 		}
 	}
 }
+
+
