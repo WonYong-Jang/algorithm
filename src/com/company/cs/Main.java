@@ -11,135 +11,86 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
 
-	static final int max_value = 300000;
-	static int N ,K;
-	static int[] tree = new int[max_value*4+5];
-	static Node[] data = new Node[max_value+5];
-	static Point[] q = new Point[max_value+5];
-	static int[] ans = new int[max_value+5];
+	static int N, K;
+	static PriorityQueue<Node> que = new PriorityQueue<>(new mySort());
+	static int[] par = new int[5005];
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		int testCase = Integer.parseInt(st.nextToken());
-		for(int k=1; k<= testCase; k++)
-		{
-			st = new StringTokenizer(br.readLine());
-			N = Integer.parseInt(st.nextToken());
-			K = Integer.parseInt(st.nextToken());
-			
-			for(int i=1; i<= N*4; i++) tree[i] = 0;
-			
-			st = new StringTokenizer(br.readLine());
-			int left = 0, right = 0, num = 0;
-			for(int i=1; i<= N; i++)
-			{
-				num = Integer.parseInt(st.nextToken());
-				data[i] = new Node(num, i);
-				ans[i] = 0;
-			}
-			for(int i=1; i<= K; i++)
-			{
-				st = new StringTokenizer(br.readLine());
-				left = Integer.parseInt(st.nextToken());
-				right = Integer.parseInt(st.nextToken());
-				num = Integer.parseInt(st.nextToken());
-				q[i] = new Point(left, right, num, i);
-			}
-			Arrays.sort(data, 1, N+1, new dSort());
-			Arrays.sort(q, 1, K+1, new qSort());
-			
-			
-			
-			int index = 0, end = N+1;
-			for(int i=1; i<= K; i++)
-			{
-				index = lower_bound(1, N+1, q[i].height);
-				
-				for(int j = index; j < end; j++)
-				{
-					update(1, 1, N, data[j].index, 1);
-				}
-				int result = get(1, 1, N, q[i].left, q[i].right);
-				
-				end = index;
-				
-				ans[q[i].index] = result;
-			}
-			bw.write("#"+k+" ");
-			for(int i=1; i<= K; i++)
-			{
-				bw.write(ans[i]+" ");
-			}
-			bw.write("\n");
-		}
-		 bw.flush();
-	}
-	public static int get(int node, int start, int end, int i, int j)
-	{
-		int mid = (start + end) / 2;
-		if(end < i || j < start) return 0;
-		else if(i<= start && end <= j) return tree[node];
-		else return get(node*2, start, mid, i, j) + get(node*2+1, mid+1, end, i, j);
-	}
-	public static void update(int node, int start, int end, int index, int num)
-	{
-		if(index < start || end < index) return;
-		tree[node] += num;
-		if(start == end) return;
-		int mid = (start + end) / 2;
-		update(node*2, start, mid, index, num);
-		update(node*2+1, mid+1, end, index, num);
-	}
-	public static int lower_bound(int s, int e, int target)
-	{
-		int mid = 0;
+		N = Integer.parseInt(st.nextToken());
+		st = new StringTokenizer(br.readLine());
+		K = Integer.parseInt(st.nextToken());
 		
-		while(s < e)
+		for(int i=1; i<= N; i++) par[i] = i;
+		
+		int dx = 0, dy = 0, cost = 0;
+		for(int i=1; i<= K; i++)
 		{
-			mid = (s + e) / 2;
-			if(data[mid].height <= target) {
-				s = mid + 1;
-			}
-			else {
-				e = mid;
+			st = new StringTokenizer(br.readLine());
+			dx = Integer.parseInt(st.nextToken());
+			dy = Integer.parseInt(st.nextToken());
+			cost = Integer.parseInt(st.nextToken());
+			que.add(new Node(dx,dy,cost));
+		}
+		
+		int sum = 0;
+		int cnt = 0;
+		while(!que.isEmpty())
+		{
+			Node n = que.poll();
+			if(cnt == N-1) break;
+			int ap = find(n.dx);
+			int bp = find(n.dy);
+			if(ap != bp)
+			{
+				union(ap, bp);
+				cnt++;
+				sum += n.cost;
 			}
 		}
-		return e;
+		System.out.println(sum);
 	}
-	static class qSort implements Comparator<Point> {
-		@Override
-		public int compare(Point a, Point b) {
-			if(a.height < b.height) return 1;
-			else if(a.height > b.height) return -1;
-			else return 0;
-		}
+	public static void union(int a, int b)
+	{
+		int ap = find(a);
+		int bp = find(b);
+		par[ap] = bp;
 	}
-	static class dSort implements Comparator<Node> {
+	public static int find(int a)
+	{
+		if(par[a] == a) return a;
+		else return par[a] = find(par[a]);
+	}
+	static class mySort implements Comparator<Node> {
 		@Override
 		public int compare(Node a, Node b) {
-			if(a.height < b.height) return -1;
-			else if(a.height > b.height ) return 1;
+			if(a.cost < b.cost) return -1;
+			else if(a.cost > b.cost) return 1;
 			else return 0;
-		}
-	}
-	static class Point {
-		int left, right, height, index;
-		Point(int a, int b, int c, int d) {
-			left = a; right = b; height = c; index = d;
 		}
 	}
 	static class Node {
-		int height, index;
-		Node(int a, int b) {
-			height = a; index = b; 
+		int dx, dy, cost;
+		Node(int a, int b, int c) {
+			dx = a; dy = b; cost = c;
 		}
 	}
 }
+
+
+
+
+
+
+
+
+
 
 
