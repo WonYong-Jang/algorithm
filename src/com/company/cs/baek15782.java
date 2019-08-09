@@ -15,11 +15,11 @@ public class baek15782 {
 
 	static final int max_value = 100001;
 	static int N, M, ret;
-	static Node[] data = new Node[max_value];
-	static Node[] inData = new Node[max_value];
-	static int[] visit = new int[max_value];
-	static Point[] tree = new Point[4*max_value];
 	static ArrayList<Integer>[] adj = new ArrayList[100005];
+	static Tree[] tree = new Tree[4 * max_value];
+	static int[] visit = new int[max_value+5];
+	static Node[] tmp = new Node[max_value+5];
+	static Node[] data = new Node[max_value+5];
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -32,9 +32,9 @@ public class baek15782 {
 		{
 			adj[i] = new ArrayList<>();
 		}
-		for(int i=1; i<= N*4; i++) tree[i] = new Point(0,0);
+		for(int i=1; i<= N*4; i++) tree[i] = new Tree(0,0);
 		
-		int dx = 0 ,dy = 0, num = 0;
+		int dx = 0, dy = 0, num = 0, cmd = 0;
 		for(int i=1; i<= N-1; i++)
 		{
 			st = new StringTokenizer(br.readLine());
@@ -43,17 +43,18 @@ public class baek15782 {
 			adj[dx].add(dy);
 			adj[dy].add(dx);
 		}
+		
 		st = new StringTokenizer(br.readLine());
 		for(int i=1; i<= N; i++)
 		{
 			num = Integer.parseInt(st.nextToken());
-			data[i] = new Node(num);
-			inData[i] = new Node(0);
+			tmp[i] = new Node(num);
+			data[i] = new Node(0);
 		}
 		
-		init(1);
-		initTree(1, 1, N);
-		int cmd = 0;
+		dfs(1);
+		init(1, 1, N);
+		int result = 0, target = 0, child = 0;
 		for(int i=1; i<= M; i++)
 		{
 			st = new StringTokenizer(br.readLine());
@@ -61,21 +62,47 @@ public class baek15782 {
 			dx = Integer.parseInt(st.nextToken());
 			if(cmd == 1)
 			{
-				int result = sum(1, 1, N, data[dx].index-data[dx].child ,data[dx].index);
-				System.out.println(result);
+				target = tmp[dx].index;
+				child = tmp[dx].child;
+				result = sum(1, 1, N, target - child, target);
+				bw.write(result+"\n");
 			}
 			else
 			{
-				dy = Integer.parseInt(st.nextToken());
-				update(1, 1, N, data[dx].index-data[dx].child, data[dx].index, dy);
+				num = Integer.parseInt(st.nextToken());
+				target = tmp[dx].index;
+				child = tmp[dx].child;
+				update(1, 1, N, target-child, target, num);
 			}
 		}
+		bw.flush();
+	}
+	public static int sum(int node, int start, int end, int i, int j)
+	{
+		if(tree[node].lazy != 0)
+		{
+			if( (end-start+1) % 2 != 0) tree[node].num ^= tree[node].lazy;
+			if(start != end)
+			{
+				tree[node*2].lazy ^= tree[node].lazy;
+				tree[node*2+1].lazy ^= tree[node].lazy;
+			}
+			tree[node].lazy = 0;
+		}
+		
+		if(end < i || j < start) return 0;
+		else if(i <= start && end <= j )
+		{
+			return tree[node].num;
+		}
+		int mid = (start + end) >> 1;
+		return sum(node*2, start, mid, i, j) ^ sum(node*2+1, mid+1, end, i, j);
 	}
 	public static void update(int node, int start, int end, int i, int j, int num)
 	{
 		if(tree[node].lazy != 0)
 		{
-			if( (end-start+1) % 2 != 0 ) tree[node].num ^= tree[node].lazy;
+			if( (end-start+1) % 2 != 0) tree[node].num ^= tree[node].lazy;
 			if(start != end)
 			{
 				tree[node*2].lazy ^= tree[node].lazy;
@@ -97,66 +124,43 @@ public class baek15782 {
 		}
 		int mid = (start + end) >> 1;
 		update(node*2, start, mid, i, j, num);
-		update(node*2 + 1, mid+1, end, i, j, num);
+		update(node*2+1, mid+1, end, i, j, num);
 		tree[node].num = tree[node*2].num ^ tree[node*2+1].num;
 	}
-	public static int sum(int node, int start, int end, int i, int j)
-	{
-		if(tree[node].lazy != 0)
-		{
-			if( (end-start+1) % 2 != 0 ) tree[node].num ^= tree[node].lazy;
-			if(start != end)
-			{
-				tree[node*2].lazy ^= tree[node].lazy;
-				tree[node*2+1].lazy ^= tree[node].lazy;
-			}
-			tree[node].lazy = 0;
-		}
-		
-		if(end < i || j < start) return 0;
-		else if(i <= start && end <= j) 
-		{
-			return tree[node].num;
-		}
-		else
-		{
-			int mid = (start + end) >> 1;
-			return sum(node*2, start, mid, i, j) + sum(node*2+1, mid+1, end, i, j);
-		}
-	}
-	public static int initTree(int node, int start, int end)
+	public static int init(int node, int start, int end)
 	{
 		int mid = (start + end) >> 1;
-		if(start == end ) return tree[node].num = inData[start].cost;
-		else return tree[node].num = initTree(node*2, start, mid) ^ initTree(node*2+1, mid+1, end);
+		if(start == end) return tree[node].num = data[start].cost;
+		else return tree[node].num = init(node*2, start, mid) ^ init(node*2+1, mid+1, end);
 	}
-	public static int init(int node)
+	static int dfs(int cur)
 	{
 		int child = 0;
-		visit[node] = 1;
-		for(int next : adj[node])
+		visit[cur] = 1;
+		for(int next : adj[cur])
 		{
 			if(visit[next] == 1) continue;
-			child += init(next);
+			child += dfs(next);
 		}
 		
-		data[node].child = child;
-		data[node].index = ++ret;
-		inData[ret].child = child;
-		inData[ret].cost = data[node].cost;
+		tmp[cur].child = child;
+		tmp[cur].index = ++ret;
+		data[ret].child = child;
+		data[ret].index = ret;
+		data[ret].cost = tmp[cur].cost;
 		
 		return child + 1;
 	}
-	static class Point {
-		int num, lazy;
-		Point(int a, int b) {
-			num = a; lazy = b;
+	static class Node {
+		int index, cost, child;
+		Node(int a) { 
+			cost = a;
 		}
 	}
-	static class Node {
-		int index, child, cost;
-		Node(int a) {
-			cost = a;
+	static class Tree {
+		int num, lazy;
+		Tree(int a, int b) {
+			num = a; lazy = b;
 		}
 	}
 }
