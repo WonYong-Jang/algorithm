@@ -5,129 +5,113 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.PriorityQueue;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
 
-	static final int max_value = 1000001;
-	static int N, M, K;
-	static Node[] tree = new Node[4*max_value+5];
-	static long[] data = new long[max_value+5];
+	static final int max_level = 17;
+	static int N, M;
+	static int[][] par = new int[100005][20];
+	static int[] depth = new int[100005];
+	static Queue<Integer> que = new LinkedList<>();
+	static ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
-		K = Integer.parseInt(st.nextToken());
-		long num = 0;
-		
-		for(int i=1; i<= N*4; i++)
+		for(int i=0; i<= N; i++)
 		{
-			tree[i] = new Node(0,0);
+			adj.add(new ArrayList<>());
+			depth[i] = -1;
 		}
-		
-		for(int i=1; i<= N; i++)
+		int dx =0, dy =0;
+		for(int i=1; i<= N-1; i++)
 		{
 			st = new StringTokenizer(br.readLine());
-			num = (long)Integer.parseInt(st.nextToken());
-			data[i] = num;
-		}
-		init(1, 1, N);
-		int cmd = 0, dx = 0, dy = 0;
-		for(int i=1; i<= M+K; i++)
-		{
-			st = new StringTokenizer(br.readLine());
-			cmd = Integer.parseInt(st.nextToken());
 			dx = Integer.parseInt(st.nextToken());
 			dy = Integer.parseInt(st.nextToken());
-			if(cmd == 1)
+			adj.get(dx).add(dy);
+			adj.get(dy).add(dx);
+		}
+		
+		depth[1] = 0;
+		que.add(1);
+		while(!que.isEmpty())
+		{
+			int n = que.poll();
+			
+			for(int next : adj.get(n))
 			{
-				num = (long)Integer.parseInt(st.nextToken());
-				update(1, 1, N, dx, dy, num);
+				if(depth[next] == -1)
+				{
+					depth[next] = depth[n] + 1;
+					par[next][0] = n;
+					que.add(next);
+				}
 			}
-			else
+		}
+		
+		for(int k=1; k<= max_level; k++)
+		{
+			for(int i=1; i<= N; i++)
 			{
-				long result = sum(1, 1, N, dx, dy);
-				bw.write(result+"\n");
+				int tmp = par[i][k-1];
+				par[i][k] = par[tmp][k-1];
 			}
+		}
+		st = new StringTokenizer(br.readLine());
+		M = Integer.parseInt(st.nextToken());
+		for(int i=1; i<= M; i++)
+		{
+			st = new StringTokenizer(br.readLine());
+			dx = Integer.parseInt(st.nextToken());
+			dy = Integer.parseInt(st.nextToken());
+			
+			if(depth[dx] != depth[dy])
+			{
+				if(depth[dx] > depth[dy])
+				{
+					int tmp = dx;
+					dx = dy;
+					dy = tmp;
+				}
+				
+				for(int k = max_level; k >= 0; k--)
+				{
+					if(depth[dx] <= depth[par[dy][k]])
+					{
+						dy = par[dy][k];
+					}
+				}
+			}
+			
+			int lca = dx;
+			
+			if(dx != dy)
+			{
+				for(int k = max_level; k >= 0; k--)
+				{
+					if(par[dx][k] != par[dy][k])
+					{
+						dy = par[dy][k];
+						dx = par[dx][k];
+					}
+					lca = par[dx][k];
+				}
+			}
+			bw.write(lca+"\n");
 		}
 		bw.flush();
-	}
-	public static long sum(int node, int start, int end, int i, int j)
-	{
-		if(tree[node].lazy != 0)
-		{
-			tree[node].num += (end-start+1)*tree[node].lazy;
-			if(start != end)
-			{
-				tree[node*2].lazy += tree[node].lazy;
-				tree[node*2+1].lazy += tree[node].lazy;
-			}
-			tree[node].lazy = 0;
-		}
-		
-		if(end < i || j < start) return 0;
-		else if(i <= start && end <= j)
-		{
-			return tree[node].num;
-		}
-		else
-		{
-			int mid = (start + end) >> 1;
-			return sum(node*2, start, mid, i, j) + sum(node*2+1, mid+1, end, i, j);
-		}
-	}
-	public static void update(int node, int start, int end, int i, int j, long num)
-	{
-		if(tree[node].lazy != 0)
-		{
-			tree[node].num += (end-start+1)*tree[node].lazy;
-			if(start != end)
-			{
-				tree[node*2].lazy += tree[node].lazy;
-				tree[node*2+1].lazy += tree[node].lazy;
-			}
-			tree[node].lazy = 0;
-		}
-		
-		if(end < i || j < start) return;
-		else if(i <= start && end <= j) 
-		{
-			tree[node].num += (end-start+1)*num;
-			if(start != end)
-			{
-				tree[node*2].lazy += num;
-				tree[node*2+1].lazy += num;
-			}
-			return;
-		}
-		int mid = ( start + end) >> 1;
-		update(node*2, start, mid, i, j, num);
-		update(node*2+1, mid+1, end, i, j, num);
-		tree[node].num = tree[node*2].num + tree[node*2+1].num;
-	}
-	public static long init(int node, int start, int end)
-	{
-		int mid = (start + end) >> 1;
-		if(start == end) return tree[node].num = data[start];
-		else return tree[node].num = init(node*2, start, mid) + init(node*2+1, mid+1, end);
-	}
-	static class Node {
-		long num, lazy;
-		Node(long a, long b) {
-			num = a; lazy = b;
-		}
+			
 	}
 }
+
+
 
 
 
