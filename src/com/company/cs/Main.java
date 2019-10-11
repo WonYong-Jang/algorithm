@@ -12,103 +12,80 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-	static final int max_level = 17;
-	static int N, M;
-	static int[][] par = new int[100005][20];
-	static int[] depth = new int[100005];
-	static Queue<Integer> que = new LinkedList<>();
-	static ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+	static int V, E, number, cnt;
+	static ArrayList<Integer>[] adj = new ArrayList[10005];
+	static int[] ans = new int[10005];
+	static int[] order = new int[10005];
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken());
-		for(int i=0; i<= N; i++)
+		V = Integer.parseInt(st.nextToken());
+		E = Integer.parseInt(st.nextToken());
+		number = 0; cnt = 0;
+		for(int i=1; i<= V; i++)
 		{
-			adj.add(new ArrayList<>());
-			depth[i] = -1;
-		}
-		int dx =0, dy =0;
-		for(int i=1; i<= N-1; i++)
-		{
-			st = new StringTokenizer(br.readLine());
-			dx = Integer.parseInt(st.nextToken());
-			dy = Integer.parseInt(st.nextToken());
-			adj.get(dx).add(dy);
-			adj.get(dy).add(dx);
+		    adj[i] = new ArrayList<>();
 		}
 		
-		depth[1] = 0;
-		que.add(1);
-		while(!que.isEmpty())
+		int dx = 0, dy = 0;
+		for(int i=1; i<= E; i++)
 		{
-			int n = que.poll();
-			
-			for(int next : adj.get(n))
-			{
-				if(depth[next] == -1)
-				{
-					depth[next] = depth[n] + 1;
-					par[next][0] = n;
-					que.add(next);
-				}
-			}
+		    st = new StringTokenizer(br.readLine());
+		    dx = Integer.parseInt(st.nextToken());
+		    dy = Integer.parseInt(st.nextToken());
+		    adj[dx].add(dy);
+		    adj[dy].add(dx);
 		}
 		
-		for(int k=1; k<= max_level; k++)
+		for(int i=1; i<= V; i++)
 		{
-			for(int i=1; i<= N; i++)
-			{
-				int tmp = par[i][k-1];
-				par[i][k] = par[tmp][k-1];
-			}
+		    if(order[i] != 0) continue;
+		    dfs(i, 0);
 		}
-		st = new StringTokenizer(br.readLine());
-		M = Integer.parseInt(st.nextToken());
-		for(int i=1; i<= M; i++)
+		System.out.println(cnt);
+		for(int i=1; i<= V;i ++)
 		{
-			st = new StringTokenizer(br.readLine());
-			dx = Integer.parseInt(st.nextToken());
-			dy = Integer.parseInt(st.nextToken());
-			
-			if(depth[dx] != depth[dy])
-			{
-				if(depth[dx] > depth[dy])
-				{
-					int tmp = dx;
-					dx = dy;
-					dy = tmp;
-				}
-				
-				for(int k = max_level; k >= 0; k--)
-				{
-					if(depth[dx] <= depth[par[dy][k]])
-					{
-						dy = par[dy][k];
-					}
-				}
-			}
-			
-			int lca = dx;
-			
-			if(dx != dy)
-			{
-				for(int k = max_level; k >= 0; k--)
-				{
-					if(par[dx][k] != par[dy][k])
-					{
-						dy = par[dy][k];
-						dx = par[dx][k];
-					}
-					lca = par[dx][k];
-				}
-			}
-			bw.write(lca+"\n");
+		    if(ans[i] == 1) System.out.print(i+" ");
 		}
-		bw.flush();
-			
+		System.out.println();
+		
 	}
+	public static int dfs(int cur, int p)
+	{
+	    order[cur] = ++number;
+	    int ret = order[cur], child = 0;
+	    
+	    for(int next : adj[cur])
+	    {
+	        if(next == p) continue;
+	        if(order[next] != 0 )
+	        {
+	            ret = min(ret, order[next]);
+	            continue;
+	        }
+	        child++;
+	        
+	        int prev = dfs(next, cur);
+	        
+	        if(p != 0 && order[cur] <= prev && ans[cur] == 0)
+	        {
+	            ans[cur] = 1;
+	            cnt++;
+	        }
+	        ret = min(ret, prev);
+	    }
+	    
+	    if(p == 0 && child >= 2 && ans[cur] == 0 )
+	    {
+	        ans[cur] = 1;
+	        cnt++;
+	    }
+	    
+	    return ret;
+	}
+	public static int min(int a, int b) { return a > b ? b: a; }
 }
 
 
