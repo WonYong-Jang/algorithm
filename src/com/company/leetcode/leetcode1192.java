@@ -18,7 +18,7 @@ public class leetcode1192 {
     
 }
 
-class Solution {
+class Solution1192 {
     int number = -1;
     ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>();
     int[] order;
