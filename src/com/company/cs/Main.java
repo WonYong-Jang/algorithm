@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
@@ -21,75 +23,33 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		V = Integer.parseInt(st.nextToken());
-		E = Integer.parseInt(st.nextToken());
-		number = 0; cnt = 0;
-		for(int i=1; i<= V; i++)
-		{
-		    adj[i] = new ArrayList<>();
-		}
 		
-		int dx = 0, dy = 0;
-		for(int i=1; i<= E; i++)
-		{
-		    st = new StringTokenizer(br.readLine());
-		    dx = Integer.parseInt(st.nextToken());
-		    dy = Integer.parseInt(st.nextToken());
-		    adj[dx].add(dy);
-		    adj[dy].add(dx);
-		}
-		
-		for(int i=1; i<= V; i++)
-		{
-		    if(order[i] != 0) continue;
-		    dfs(i, 0);
-		}
-		System.out.println(cnt);
-		for(int i=1; i<= V;i ++)
-		{
-		    if(ans[i] == 1) System.out.print(i+" ");
-		}
-		System.out.println();
 		
 	}
-	public static int dfs(int cur, int p)
-	{
-	    order[cur] = ++number;
-	    int ret = order[cur], child = 0;
-	    
-	    for(int next : adj[cur])
-	    {
-	        if(next == p) continue;
-	        if(order[next] != 0 )
-	        {
-	            ret = min(ret, order[next]);
-	            continue;
-	        }
-	        child++;
-	        
-	        int prev = dfs(next, cur);
-	        
-	        if(p != 0 && order[cur] <= prev && ans[cur] == 0)
-	        {
-	            ans[cur] = 1;
-	            cnt++;
-	        }
-	        ret = min(ret, prev);
-	    }
-	    
-	    if(p == 0 && child >= 2 && ans[cur] == 0 )
-	    {
-	        ans[cur] = 1;
-	        cnt++;
-	    }
-	    
-	    return ret;
-	}
-	public static int min(int a, int b) { return a > b ? b: a; }
 }
 
 
 
 
-
+class Solution {
+    int number = 0;
+    ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>();
+    int[] order;
+    List<List<Integer>> ans = new ArrayList<>();
+    public List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+        
+        
+        
+        System.out.println(n+" "+connections);
+        
+        List<List<Integer>> test = new ArrayList<>();
+        
+        for(List<Integer> next : test)
+        {
+            
+        }
+        
+        return test;
+    }
+}
 
