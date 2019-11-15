@@ -5,17 +5,16 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.HashMap;
 import java.util.StringTokenizer;
 
 public class factory {
     
-    static final int eCnt = 5;
     static int N, M, K, result, len;
-    static HashMap<Character, Integer>[] map = new HashMap[5005];
-    static int[][][] dp = new int[6][6][5005];
-    static char[] eng = new char[6];
-    static int[] engCnt = new int[6];
+    static int[] people = new int[6];
+    static int[] order = new int[6];
+    static int[] visit = new int[6];
+    static int[][] arr = new int[5005][30];
+    static int[][] dp = new int[5005][6];
     public static void main(String[] args) throws IOException {
         // TODO Auto-generated method stub
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -28,68 +27,69 @@ public class factory {
             N = Integer.parseInt(st.nextToken());
             M = Integer.parseInt(st.nextToken());
             K = Integer.parseInt(st.nextToken());
-            
-            for(int i=1; i<= N; i++) map[i] = new HashMap<>();
-            
-            for(int i=1; i<= eCnt; i++) engCnt[i] = 0;
-            
-            for(int a = 1; a <= eCnt; a++) {
-                for(int b = 1; b <= eCnt; b++) {
-                    for(int c = 1; c <= N; c++) {
-                        dp[a][b][c] = 0;
-                    }
+            result = 0; len = 0;
+            for(int i=1; i<= N; i++)
+            {
+                for(int j=1; j<= 26; j++)
+                {
+                    arr[i][j] = 0;
                 }
             }
-            result = 0; 
-            int num = 0, len = 1;
-            char temp = 0;
+            String str = br.readLine();
             
-            String str = br.readLine().trim();
-            eng[1] = str.charAt(0);
-            engCnt[1] = 1; 
-            for(int i = 2; i <= str.length(); i++)
-            {
-                temp = str.charAt(i-1);
-                int j = 1, flag = 0;
-                for(j = 1; j <= len; j++) {
-                    if(eng[j] == temp) {
-                        engCnt[j]++;
-                        flag = 1;
-                        break;
-                    }
-                }
-                if(flag == 0) {
-                    eng[++len] = temp;
-                    engCnt[len] = 1;
-                }
+            for(int i=1; i<= K; i++) {
+                people[i] = str.charAt(i-1) - 'A' + 1;
+                visit[i] = 0;
             }
             
             for(int i=1; i<= M; i++)
             {
-                str = br.readLine().trim();
+                str = br.readLine();
                 for(int j=1; j<= N; j++)
                 {
-                    temp = str.charAt(j-1);
-                    if(map[j].containsKey(temp))
-                    {
-                        num = map[j].get(temp);
-                        map[j].put(temp, num+1);
-                    }
-                    else map[j].put(temp, 1);
+                    arr[j][str.charAt(j-1) - 'A' + 1]++;
                 }
             }
-           
-           
-           for(int i = 1; i <= N; i++)
-           {
-               
-           }
+            
+            for(int i=1; i<= K; i++)
+            {
+                visit[i] = 1;
+                dfs(1, i);
+                visit[i] = 0;
+            }
             
             bw.write("#"+k+" "+result+"\n");
         }
         bw.flush();
     }
-
+    public static void dfs(int size, int cur)
+    {
+        order[size] = people[cur];
+        if(size == K) 
+        {
+            dp = new int[N+1][6];
+            
+            for(int i=1; i<= N; i++)
+            {
+                for(int j=1; j<= K; j++)
+                {
+                    dp[i][j] = max(dp[i-1][j], dp[i-1][j-1]) + arr[i][order[j]];
+                    result = max(result,dp[i][j]);
+                }
+            }
+            
+            return;
+        }
+        
+        for(int i=1; i<= K; i++)
+        {
+            if(visit[i] == 1) continue;
+            visit[i] = 1;
+            dfs(size+1, i);
+            visit[i] = 0;
+        }
+        
+    }
     public static int max(int a, int b) { return a > b ? a : b; }
     public static int min(int a, int b) { return a > b ? b : a; }
 }

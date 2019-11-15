@@ -1,5 +1,6 @@
 package com.company.leetcode;
 
+import java.util.Arrays;
 import java.util.Comparator;
 
 /**
@@ -9,7 +10,7 @@ public class leetcode973 {
     
     public static void main(String[] args) {
         // TODO Auto-generated method stub
-        
+       
     }
 }
 
