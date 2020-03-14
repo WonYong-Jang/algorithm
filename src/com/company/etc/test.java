@@ -6,84 +6,60 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class test {
     
-    static int N, start, end;
-    static Node[] data; 
-    static int[] tree;
+    static int[] indegree;
+    static ArrayList<Integer>[] adj;
+    static Queue<Integer> que = new LinkedList<>();
+    static int N, M;
     public static void main(String[] args) throws IOException {
         // TODO Auto-generated method stub
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
-        tree = new int[N*4]; // 인덱스 트리 전체 tree size 
-        data = new Node[N+1];
-        start = 1;
-        while(N > start) start *= 2; // 리프 노드의 시작 인덱스 구하기 
-        end = start + N - 1;         // 리프 노드의 마지막 인덱스  
-        
-        st = new StringTokenizer(br.readLine());
+        M = Integer.parseInt(st.nextToken());
+        indegree = new int[N+1];
+        adj = new ArrayList[N+1];
         for(int i=1; i<= N; i++) {
-            int num = Integer.parseInt(st.nextToken());
-            data[i] = new Node(num, i);
+            adj[i] = new ArrayList<>();
         }
         
-        // 값에 대해 오름차순, 값이 같다면 인덱스로 내림차순 ! 
-        Arrays.sort(data, 1, N+1, new mySort());
-        int ans = 0;
-        for(int i=1; i<= N; i++) {
-            int index = data[i].index;
-            int target = getMax(1, index-1);
-            ans = Math.max(ans, target+1);
-            update(index, target+1);
+        int dx = 0, dy = 0;
+        for(int i=1; i<= M; i++) {
+            st = new StringTokenizer(br.readLine());
+            dx = Integer.parseInt(st.nextToken());
+            dy = Integer.parseInt(st.nextToken());
+            adj[dx].add(dy);
+            indegree[dy]++; // 선행되어야할 노드 갯수 세기 
         }
-        bw.write(ans+"\n");
-        bw.flush();
-    }
-    public static int getMax(int sdx, int edx) {
-        int num = 0;
-        int s = sdx + start - 1;
-        int e = edx + start - 1;
         
-        while( s <= e) {
-            if(s % 2 != 0) num = Math.max(num, tree[s]);
-            if(e % 2 == 0) num = Math.max(num, tree[e]);
+        for(int i=1; i<= N; i++) { // ingegree == 0 은 선행되어야 할 노드  
+            if(indegree[i] == 0) que.add(i); // 전부 처리되었으니 진행 가능 ! 
+        }
+        
+        int flag = 0; // flag == N 이면 위상정렬 완료
+                      // flag > N 사이클 존재 ! 
+                      // flag < N 위상정렬 불가능 
+        while(!que.isEmpty()) {
             
-            s = (s + 1) / 2;
-            e = (e - 1) / 2;
-        }
-        
-        return num;
-    }
-    public static void update(int idx, int num) {
-        int index = idx + start - 1; // 리프노드 인덱스 값
-        
-        while(index > 0) { // 주의 : 기존에 있던 tree[index] 값보다 클 경우만 업데이트!
-            if(tree[index] < num) {
-                tree[index] = num;
-                index /= 2;
+            int cur = que.poll();
+            flag++;
+            bw.write(cur + " ");
+            
+            for(int next : adj[cur]) {
+                indegree[next]--;
+                if(indegree[next] == 0) {
+                    que.add(next);
+                }
             }
-            else break;
         }
-    }
-    static class mySort implements Comparator<Node> {
-        @Override
-        public int compare(Node a, Node b) {
-            if(a.num != b.num) return a.num - b.num;
-            else return b.index - a.index;
-        }
-    }
-    static class Node {
-        int num, index;
-        Node(int a, int b) { 
-            num = a; index = b;
-        }
+        bw.write("\n");
+        bw.flush();
     }
 }
 
