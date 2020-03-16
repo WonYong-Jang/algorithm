@@ -13,90 +13,60 @@ import java.util.StringTokenizer;
 
 public class test {
     
-    static final int max_level = 17; // 2^17 이 100,000 을 조금 넘으므로 
-    static int N, M;
-    static Queue<Integer> que = new LinkedList<>();
-    static int[] depth;
-    static int[][] par;
-    static ArrayList<Integer>[] adj;
+    static int H, W, N;
+    static int[][] dp, data;
     public static void main(String[] args) throws IOException {
         // TODO Auto-generated method stub
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(br.readLine());
+        H = Integer.parseInt(st.nextToken());
+        W = Integer.parseInt(st.nextToken());
         N = Integer.parseInt(st.nextToken());
-        adj = new ArrayList[N+1];
-        par = new int[N+1][max_level+1];
-        depth = new int[N+1];
-        for(int i=0; i<= N; i++) {
-            adj[i] = new ArrayList<>();
-            depth[i] = -1; // 주의 : 모두 -1로 초기화 해주기! 
-        } // 아래 소스 중 if(depth[dx] <= depth[par[dy][k]])  
-        // par[dy][k] 가 0이 나왔을때 dy 가 0으로 업데이트 되면 안되기 때문에 depth[0] = -1 반드시 해주기 
-        for(int i=1; i<= N-1; i++) {
-            st = new StringTokenizer(br.readLine());
-            int dx = Integer.parseInt(st.nextToken());
-            int dy = Integer.parseInt(st.nextToken());
-            adj[dx].add(dy);
-            adj[dy].add(dx);
-        }
+        dp = new int[H+2][W+2];
+        data = new int[H+2][W+2];
         
-        que.add(1); // 루트 부터 depth 와 각 노드별 조상 기록 하기
-        depth[1] = 0;
-        while(!que.isEmpty()) {
-            int n = que.poll();
-            
-            for(int next : adj[n]) {
-                if(depth[next] == -1) {
-                    depth[next] = depth[n] + 1;
-                    par[next][0] = n;
-                    que.add(next);
-                }
+        for(int i = 1; i <= H; i++) {
+            st = new StringTokenizer(br.readLine());
+            for(int j = 1; j <= W; j++) {
+                data[i][j] = Integer.parseInt(st.nextToken());
             }
         }
         
-        for(int k = 1; k <= max_level; k++) { // 각 노드 별로 부모 기록 ! 
-            for(int cur = 1; cur <= N; cur++) { // 2^0 , 2^1, 2^2 ..
-                int tmp = par[cur][k-1];
-                par[cur][k] = par[tmp][k-1];
-            }
-        }
-        
-        st = new StringTokenizer(br.readLine());
-        M = Integer.parseInt(st.nextToken());
-        for(int i=1; i <= M; i++) {
-            st = new StringTokenizer(br.readLine());
-            int dx = Integer.parseInt(st.nextToken());
-            int dy = Integer.parseInt(st.nextToken());
-            
-            if(depth[dx] != depth[dy]) {
+        for(int i = 1; i <= H; i++) {
+            for(int j = 1; j <= W; j++) {
+                if(i == 1 && j == 1) dp[1][1] = N-1; // 출근길 N-1 번째 동안 밟은 횟수
                 
-                if(depth[dx] > depth[dy]) { // dy 기준으로 depth 맞추기 위해서 
-                    int tmp = dx;
-                    dx = dy;
-                    dy = tmp;
-                }
-                
-                for(int k = max_level; k >= 0; k--) {
-                    if(depth[dx] <= depth[par[dy][k]]) {
-                        dy = par[dy][k];
+                if(dp[i][j] % 2 != 0) {
+                    if(data[i][j] == 1) {
+                        dp[i][j+1] += (dp[i][j] + 1) / 2;
+                        dp[i+1][j] += dp[i][j] / 2;
+                    }
+                    else {
+                        dp[i][j+1] += dp[i][j] / 2;
+                        dp[i+1][j] += (dp[i][j]+1) / 2;
                     }
                 }
-            }
-            
-            int lca = dx;
-            
-            if(dx != dy) {
-                for(int k = max_level; k >= 0; k--) {
-                    if(par[dx][k] != par[dy][k]) {
-                        dx = par[dx][k];
-                        dy = par[dy][k];
-                    }
-                    lca = par[dx][k];
+                else {
+                    dp[i][j+1] += dp[i][j] / 2;
+                    dp[i+1][j] += dp[i][j] / 2;
                 }
             }
-            bw.write(lca+"\n");
         }
+        
+        int dx = 1, dy =1; // 시작 인덱스 
+        while(dx >=1 && dy >=1 && dx<= H && dy <= W)
+        {
+            if(dp[dx][dy] % 2 != 0) {       // 홀수 일때 방향 전환 
+                if(data[dx][dy] == 1) dx++; // 아래로 방향 전환 
+                else dy++;                  // 오른쪽 으로 방향 전환 
+            }
+            else { // 짝수 일때 그대로 
+                if(data[dx][dy] == 1) dy++;
+                else dx++;
+            }
+        }
+        bw.write(dx+" "+dy+"\n");
         bw.flush();
     }
 }
