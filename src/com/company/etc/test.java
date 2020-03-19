@@ -68,6 +68,7 @@ public class test {
         }
         bw.write(dx+" "+dy+"\n");
         bw.flush();
+        System.out.printf(null, null, args);
     }
 }
 
