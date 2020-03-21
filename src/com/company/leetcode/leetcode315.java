@@ -1,8 +1,5 @@
 package com.company.leetcode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public class leetcode315 {
     
     public static void main(String[] args) {
