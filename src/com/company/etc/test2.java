@@ -14,8 +14,8 @@ import java.util.StringTokenizer;
 
 public class test2 {
     
-    static int N, M;
-    static int[] ans;
+    static int N, M, K;
+    static long[] tree, data;
     public static void main(String[] args) throws IOException {
         // TODO Auto-generated method stub
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -23,42 +23,50 @@ public class test2 {
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
-        ans = new int[N+1];
-        st = new StringTokenizer(br.readLine());
-        Deque<Node> que = new ArrayDeque<>();
+        K = Integer.parseInt(st.nextToken());
+        tree = new long[N*4];
+        data = new long[N+1];
         for(int i=1; i<= N; i++) {
-            int num = Integer.parseInt(st.nextToken());
-            
-            while(!que.isEmpty()) { // 조건에 만족할때 까지 뒷 부분 빼주기 
-                Node n = que.peekLast();
-                
-                if(n.num >= num) que.pollLast(); // 현재 num 보다 크거나 같다면
-                else break;                       // 최소값 가능성 없으므로 빼주기 
-            }
-            que.addLast(new Node(num, i));
-            
-            while(!que.isEmpty()) {
-                
-                if(i - que.peekFirst().index < M) break; // 범위 안에 들어와야함 
-                else que.pollFirst();
-            }
-            ans[i] = que.peekFirst().num;
-            
+            st = new StringTokenizer(br.readLine());
+            data[i] = Integer.parseInt(st.nextToken());
         }
+        init(1, 1, N);
         
-        for(int i=1; i<= N; i++) {
-            bw.write(ans[i]+" ");
+        for(int i=1; i<= M+K; i++) {
+            st = new StringTokenizer(br.readLine());
+            int cmd = Integer.parseInt(st.nextToken());
+            int dx = Integer.parseInt(st.nextToken());
+            int dy = Integer.parseInt(st.nextToken());
+            if(cmd == 1) {
+                update(1,1,N, dx, (long)dy - data[dx]);
+                data[dx] = dy;
+            }
+            else {
+                long result = sum(1,1,N, dx, dy);
+                bw.write(result+"\n");
+            }
         }
-        
         bw.flush();
     }
-    static class Node {
-        int num, index;
-        Node(int a, int b) { 
-            num = a; index = b;
-        }
+    public static long init(int node, int start, int end) {
+        int mid = (start + end) / 2;
+        if(start == end) return tree[node] = data[start];
+        else return tree[node] = init(node*2, start, mid) + init(node*2+1, mid+1, end);
     }
-    
+    public static void update(int node, int start, int end, int target, long diff) {
+        if(target < start || target > end) return;
+        tree[node] += diff;
+        if(start == end) return;
+        int mid = (start + end) / 2;
+        update(node*2, start, mid, target, diff);
+        update(node*2+1, mid+1, end, target, diff);
+    }
+    public static long sum(int node, int start, int end, int i, int j) {
+        if(j < start || i > end) return 0;
+        else if(i <= start && end <= j) return tree[node];
+        int mid = (start + end) / 2;
+        return sum(node*2, start, mid, i, j) + sum(node*2+1, mid+1, end, i, j);
+    }
 }
 
 
