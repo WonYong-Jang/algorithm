@@ -1,6 +1,6 @@
 package com.company.hackerRank;
 
-public class hackRank_countingInversion {
+public class hRank_countingInversion {
     
     public static void main(String[] args) {
         // TODO Auto-generated method stub
