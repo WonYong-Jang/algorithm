@@ -6,55 +6,64 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Deque;
+import java.util.PriorityQueue;
+import java.util.Stack;
 import java.util.StringTokenizer;
-
-
 
 public class test2 {
     
-    static int N, M, K;
-    static int[] data, dp;
+    static int N, M, K, start, end;
+    static int[] tree;
+    static Node[] data;
     public static void main(String[] args) throws IOException {
         // TODO Auto-generated method stub
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
-        data = new int[N+1];
-        dp = new int[N+1];
+        PriorityQueue<Integer> que = new PriorityQueue<>();
+        start = 1;
+        while(N > start) start *=2;
+        end = start + N - 1;
+        
+        
+        data = new Node[N+1];
+        tree = new int[N*4];
         st = new StringTokenizer(br.readLine());
+        int num = 0;
         for(int i=1; i<= N; i++) {
-            data[i] = Integer.parseInt(st.nextToken());
+            num = Integer.parseInt(st.nextToken());
+            data[i] = new Node(num, i);
+        }
+        Arrays.sort(data, 1, N+1, new mySort());
+        
+        for(int i=1; i<= N; i++) {
+            
         }
         
-        int index = 1;
-        dp[1] = data[1];
-        for(int i=2; i <= N; i++) {
-            if(dp[index] < data[i]) dp[++index] = data[i];
-            else {
-                int idx = lower_bound(1, index, data[i]);
-                dp[idx] = data[i];
-            }
-        }
-        bw.write(index+"\n");
         bw.flush();
     }
-    public static int lower_bound(int s, int e, int target) {
-        
-        int mid = 0;
-        
-        while(s < e) {
-            mid = (s + e) / 2;
-            if(dp[mid] < target) {
-                s = mid + 1;
-            }
-            else {
-                e = mid;
-            }
+    public static void update(int idx) {
+        int index = idx + start - 1;
+        while(index > 0) {
+            tree[index]++;
+            index /= 2;
         }
-        return e;
+    }
+    static class mySort implements Comparator<Node> {
+        public int compare(Node a, Node b) {
+            if(a.num != b.num) return a.num - b.num;
+            else return b.index - a.index;
+        }
+    }
+    static class Node {
+        int num, index;
+        Node(int a, int b) {
+            num = a; index = b;
+        }
     }
 }
 
