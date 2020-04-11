@@ -15,22 +15,17 @@ import java.util.StringTokenizer;
 
 public class test2 {
     
-    static int N;
+    static int N, M, K;
     public static void main(String[] args) throws IOException {
         // TODO Auto-generated method stub
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        K = Integer.parseInt(st.nextToken());
         
-        long[] dp = new long[N+2];
-        dp[1] = 1;
-        dp[2] = 1;
-        for(int i=3; i<= N; i++) {
-            dp[i] = dp[i-1] + dp[i-2];
-        }
         
-        bw.write(dp[N]+"\n");
         
         bw.flush();
     }
