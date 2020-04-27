@@ -45,15 +45,32 @@ public class baek2618 {
                 dp[i][j] = -1; // 방문 표시 
 		
 		bw.write(search(0,0) + "\n");
-		
-		for(int i=0; i<= W; i++) {
-		    for(int j=0; j<= W; j++) {
-		        System.out.print(dp[i][j] + " ");
-		    }
-		    System.out.println();
+		track(0,0);
+		for(int i=0; i< ans.size(); i++) {
+		    bw.write(ans.get(i)+"\n");
 		}
 		
 		bw.flush();
+	}
+	public static void track(int dx, int dy) {
+	    if(dx == W || dy == W) return;
+	    
+	    int next = max(dx, dy) + 1;
+	    
+	    int dis1 = abs(point1[next].dx, point1[dx].dx) + abs(point1[next].dy, point1[dx].dy);
+	    int ret1 = dp[next][dy] + dis1;
+	    
+	    int dis2 = abs(point2[next].dx, point2[dy].dx) + abs(point2[next].dy, point2[dy].dy);
+	    int ret2 = dp[dx][next] + dis2;
+	    
+	    if(ret1 <= ret2) {
+	        ans.add(1);
+	        track(next,dy);
+	    }
+	    else {
+	        ans.add(2);
+	        track(dx, next);
+	    }
 	}
 	public static int search(int dx, int dy) {
 	    if(dx == W || dy == W) return 0;
@@ -83,9 +100,3 @@ public class baek2618 {
 	
 }
 
-/**
-6
-2
-1 1
-1 2
- */
