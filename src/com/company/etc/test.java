@@ -6,69 +6,89 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.StringTokenizer;
 
 public class test {
     
-    static int H, W, N;
-    static int[][] dp, data;
+    static int N;
+    static Point[] p;
+    static final int INF = 1 << 30;
+    static ArrayList<Point> arr = new ArrayList<>();
     public static void main(String[] args) throws IOException {
         // TODO Auto-generated method stub
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        H = Integer.parseInt(st.nextToken());
-        W = Integer.parseInt(st.nextToken());
         N = Integer.parseInt(st.nextToken());
-        dp = new int[H+2][W+2];
-        data = new int[H+2][W+2];
+        p = new Point[N];
         
-        for(int i = 1; i <= H; i++) {
+        int dx=0, dy=0;
+        for(int i=0; i< N; i++) {
             st = new StringTokenizer(br.readLine());
-            for(int j = 1; j <= W; j++) {
-                data[i][j] = Integer.parseInt(st.nextToken());
-            }
+            dx = Integer.parseInt(st.nextToken());
+            dy = Integer.parseInt(st.nextToken());
+            p[i] = new Point(dx,dy);
         }
         
-        for(int i = 1; i <= H; i++) {
-            for(int j = 1; j <= W; j++) {
-                if(i == 1 && j == 1) dp[1][1] = N-1; // 출근길 N-1 번째 동안 밟은 횟수
-                
-                if(dp[i][j] % 2 != 0) {
-                    if(data[i][j] == 1) {
-                        dp[i][j+1] += (dp[i][j] + 1) / 2;
-                        dp[i+1][j] += dp[i][j] / 2;
-                    }
-                    else {
-                        dp[i][j+1] += dp[i][j] / 2;
-                        dp[i+1][j] += (dp[i][j]+1) / 2;
-                    }
-                }
-                else {
-                    dp[i][j+1] += dp[i][j] / 2;
-                    dp[i+1][j] += dp[i][j] / 2;
-                }
-            }
-        }
+        Arrays.sort(p, 0, N, new xSort());
+        int result = solve(0, N-1);
         
-        int dx = 1, dy =1; // 시작 인덱스 
-        while(dx >=1 && dy >=1 && dx<= H && dy <= W)
-        {
-            if(dp[dx][dy] % 2 != 0) {       // 홀수 일때 방향 전환 
-                if(data[dx][dy] == 1) dx++; // 아래로 방향 전환 
-                else dy++;                  // 오른쪽 으로 방향 전환 
-            }
-            else { // 짝수 일때 그대로 
-                if(data[dx][dy] == 1) dy++;
-                else dx++;
-            }
-        }
-        bw.write(dx+" "+dy+"\n");
+        bw.write(result+"\n");
         bw.flush();
     }
+    public static int solve(int s, int e) {
+        int result = INF, diff = e - s +1;
+        int mid = (s + e) / 2; 
+                
+        if(diff <= 2) return result = dis(p[s], p[e]);
+        else if(diff <= 3) return result = Math.min( dis(p[s], p[mid]), Math.min (dis(p[s],p[e]), dis(p[mid], p[e]) ));
+        else {
+            
+            int d = Math.min(solve(s,mid), solve(mid+1, e) );
+            arr.clear();
+            for(int i=s; i<= e; i++) {
+                int target = (p[mid].dx-p[i].dx)*(p[mid].dx-p[i].dx);
+                if(target < d) arr.add(p[i]); 
+            }
+            
+            Collections.sort(arr, new ySort());
+            
+            result = d;
+            int len = arr.size();
+            for(int i=0; i< len-1; i++) {
+                for(int j= i+1; j< len  && (arr.get(j).dy - arr.get(i).dy) < result ; j++) {
+                    int tmp = dis( arr.get(i), arr.get(j) );
+                    
+                    result = Math.min(result, tmp);
+                }
+            }
+            
+            return result;
+        }
+    }
+    public static int dis(Point a, Point b) {
+        return (a.dx-b.dx)*(a.dx-b.dx) + (a.dy-b.dy)*(a.dy-b.dy);
+    }
+    static class ySort implements Comparator<Point> {
+        public int compare(Point a, Point b) {
+            return a.dy - b.dy;
+        }
+    }
+    static class xSort implements Comparator<Point> {
+        public int compare(Point a, Point b) {
+            return a.dx - b.dx;
+        }
+    }
+    static class Point {
+        int dx,dy;
+        Point(int a, int b) {
+            dx=a; dy=b;
+        }
+    }
+    
 }
 
 

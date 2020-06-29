@@ -9,44 +9,38 @@ import java.util.StringTokenizer;
 
 public class test2 {
     
-    static int[] data = new int[1005];
-    static int[] dp = new int[1005];
+    static final int INF = 1 << 30;
     static int N;
+    static int[] dp;
     public static void main(String[] args) throws IOException {
         // TODO Auto-generated method stub
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
-        st = new StringTokenizer(br.readLine());
+        dp = new int[N+1];
         
-        for(int i=1; i<= N; i++) {
-            data[i] = Integer.parseInt(st.nextToken());
-        }
-        dp[1] = data[1];
-        int size = 1;
-        for(int i = 2; i <= N; i++) {
-            if(data[i] > dp[size]) dp[++size] = data[i];
-            else {
-                int idx = lower_bound(1, size+1, data[i]);
-                dp[idx] = data[i];
-            }
-        }
-        System.out.println(size);
-    }
-    public static int lower_bound(int s, int e, int target) {
-        int mid = 0;
+        for(int i=1; i<= N; i++) dp[i] = INF;
         
-        while(s < e) {
-            mid = (s+e) / 2;
-            if(dp[mid] < target) { 
-                s = mid + 1;
-            }
-            else e = mid;
-        }
-        return e;
+        search(N, 0);
+        
+        bw.write(dp[1]+"\n");
+        bw.flush();
+        
     }
-    public static int max(int a, int b) { return a > b ? a : b ; }
+    public static void search(int num, int cnt) {
+        
+        if(num <= 0 || dp[num] <= cnt ) {
+            return;
+        }
+        
+        dp[num] = cnt;
+        
+        if(num % 3 == 0) search(num/3, cnt+1);
+        if(num % 2 == 0) search(num/2, cnt+1); 
+        
+        search(num-1, cnt+1);
+    }
 }
 
 
