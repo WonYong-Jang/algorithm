@@ -9,36 +9,65 @@ import java.util.StringTokenizer;
 
 public class test2 {
     
-    static int M ,N;
-    static int[][] data, dp;
-    static int[] dxArr = {0, 0, 1, -1}, dyArr = {1, -1, 0, 0};
+    static final int MAX_VALUE = 500000;
+    static int N, H, start, end;
+    static int[] tree = new int[MAX_VALUE*4];
     public static void main(String[] args) throws IOException {
-        // TODO Auto-generated method stub
         
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        H = Integer.parseInt(st.nextToken());
         
-        boolean result = true;
-        int[] data = new int[46]; // 1 ~ 45
-        int prevNum = 0;
-        while(st.hasMoreTokens()) {
+        start = 1;
+        while(H > start) start *= 2;
+        end = start + H -1;
+        
+        for(int i=0; i< N; i++) {
+            st = new StringTokenizer(br.readLine());
             int num = Integer.parseInt(st.nextToken());
-            System.out.println(num);
+            if(i % 2 == 0) {
+                internalCnt(1, num);
+            }
+            else {
+                internalCnt(H-num+1, H);
+            }
+        }
+        solve();
+    }
+    public static void solve() {
+        
+        int result = MAX_VALUE;
+        int resultCnt = 0;
+        for(int i=start; i<= end; i++) {
             
-            if(num < 1 || num > 45 || prevNum >= num) {
-                result = false;
-                break;  
+            int index = i;
+            int sum = 0;
+            while(index > 0) {
+                sum += tree[index];
+                index /= 2;
             }
-            data[num]++;
-            if(data[num] > 1) {
-                result = false;
-                break;
+            
+            if(sum < result) {
+                result = sum;
+                resultCnt = 1;
             }
-            prevNum = num;
-        }   
+            else if(sum == result) resultCnt++;
+        }
+        System.out.println(result+ " " + resultCnt);
+    }
+    public static void internalCnt(int dx, int dy) {
+        int s = dx + start - 1;
+        int e = dy + start - 1;
         
-        
-        System.out.println(result);
+        while(s <= e) {
+            
+            if(s % 2 != 0) tree[s]++;
+            if(e % 2 == 0) tree[e]++;
+            
+            s = (s + 1) / 2;
+            e = (e - 1) / 2;
+        }
     }
 }
 
