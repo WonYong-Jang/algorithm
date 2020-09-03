@@ -4,6 +4,13 @@ public class leetcode257 {
     
     public static void main(String[] args) {
         // TODO Auto-generated method stub
+        StringBuilder sb1 = new StringBuilder();
+        StringBuilder sb2 = new StringBuilder();
+        
+        char ch = (char)(1+'a');
+        
+        System.out.println(ch);
+        System.out.println("a");
     }
 }
 /**
