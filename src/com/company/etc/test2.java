@@ -9,65 +9,64 @@ import java.util.StringTokenizer;
 
 public class test2 {
     
-    static final int MAX_VALUE = 500000;
-    static int N, H, start, end;
-    static int[] tree = new int[MAX_VALUE*4];
+    static final int MAX_VALUE = 1000001;
+    static int N, M, K;
+    static long[] tree = new long[4*MAX_VALUE];
+    static long[] data = new long[MAX_VALUE];
     public static void main(String[] args) throws IOException {
-        
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(br.readLine());
+        
         N = Integer.parseInt(st.nextToken());
-        H = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        K = Integer.parseInt(st.nextToken());
         
-        start = 1;
-        while(H > start) start *= 2;
-        end = start + H -1;
-        
-        for(int i=0; i< N; i++) {
+        for(int i=1; i<= N; i++) {
             st = new StringTokenizer(br.readLine());
-            int num = Integer.parseInt(st.nextToken());
-            if(i % 2 == 0) {
-                internalCnt(1, num);
+            data[i] = Long.parseLong(st.nextToken());
+        }
+        init(1,1,N);
+        
+        int cmd = 0, dx = 0, dy =0;
+        for(int i=1; i<= M+K; i++) {
+            st = new StringTokenizer(br.readLine());
+            cmd = Integer.parseInt(st.nextToken());
+            dx = Integer.parseInt(st.nextToken());
+            dy = Integer.parseInt(st.nextToken());
+            
+            if(cmd == 1) {
+                
+                long diff =dy-data[dx];
+                data[dx] = dy;
+                
+                update(1,1,N,dx,diff);
             }
             else {
-                internalCnt(H-num+1, H);
+                long result = sum(1, 1, N, dx, dy);
+                bw.write(result+"\n");
             }
         }
-        solve();
+        bw.flush();
     }
-    public static void solve() {
-        
-        int result = MAX_VALUE;
-        int resultCnt = 0;
-        for(int i=start; i<= end; i++) {
-            
-            int index = i;
-            int sum = 0;
-            while(index > 0) {
-                sum += tree[index];
-                index /= 2;
-            }
-            
-            if(sum < result) {
-                result = sum;
-                resultCnt = 1;
-            }
-            else if(sum == result) resultCnt++;
-        }
-        System.out.println(result+ " " + resultCnt);
+    public static void update(int node, int start, int end, int target, long diff) {
+        int mid = start + (end - start) / 2;
+        if(target < start || end < target) return;
+        tree[node] += diff;
+        if(start == end) return;
+        update(node*2, start, mid, target, diff);
+        update(node*2+1, mid+1, end, target, diff);
     }
-    public static void internalCnt(int dx, int dy) {
-        int s = dx + start - 1;
-        int e = dy + start - 1;
-        
-        while(s <= e) {
-            
-            if(s % 2 != 0) tree[s]++;
-            if(e % 2 == 0) tree[e]++;
-            
-            s = (s + 1) / 2;
-            e = (e - 1) / 2;
-        }
+    public static long init(int node, int start, int end) {
+        int mid = start + (end - start) /2;
+        if(start == end) return tree[node] = data[start];
+        else return tree[node] = init(node*2, start, mid) + init(node*2+1, mid+1, end);
+    }
+    public static long sum(int node, int start, int end, int i, int j) {
+        int mid = start + (end - start) / 2;
+        if(j < start || end < i) return 0;
+        else if(i <= start && end <= j) return tree[node];
+        else return sum(node*2, start, mid, i, j) + sum(node*2+1, mid+1, end, i, j);
     }
 }
 
