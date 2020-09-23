@@ -19,7 +19,7 @@ public class test2 {
         
         int testCase = Integer.parseInt(st.nextToken());
         
-        for(int k = 0; k < testCase; k++) {
+        for(int k = 1; k <= testCase; k++) {
             
             st = new StringTokenizer(br.readLine());
             N = Integer.parseInt(st.nextToken());
@@ -48,7 +48,7 @@ public class test2 {
                 }
             }
             
-            bw.write("#"+k+" "+answer);
+            bw.write("#"+k+" "+answer+"\n");
         }
         bw.flush();
     }
@@ -64,11 +64,16 @@ public class test2 {
 N <= 500000
 탑의 높이 100,000,000
 1,000,000,007
-1
+
+2
 5
 6 9 5 7 4
+5
+1 1 4 2 1
+
 
 8
+7
  */
 
 
