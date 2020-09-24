@@ -65,11 +65,23 @@ N <= 500000
 탑의 높이 100,000,000
 1,000,000,007
 
+1. 검사하려는 탑의 높이 보다 큰 높이 ( 가장 가까운 위치 ) 의 탑이 나올때까지 찾는다.  
+2. 스택의 맨 앞의 데이터 ( stack.peek() ) 가 검사 하려는 탑의 높이 보다 작으면 pop() 
+3. 검사 완료된 탑은 stack.add  
+
+Stack<Node> stack;
+ArrayList<Node> arr; 
+class Node {
+  int height, int index;
+}
+
 2
 5
 6 9 5 7 4
 5
 1 1 4 2 1
+
+
 
 
 8

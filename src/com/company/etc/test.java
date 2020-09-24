@@ -8,8 +8,6 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class test {
@@ -39,57 +37,58 @@ public class test {
         start = 1;
         while(N > start) start *= 2;
         end = start + N - 1;
-        
+        long volume = 0; // 정답 부피 
+        int maxCnt = 0;  // 정답 갯수 
         for(int i= 0; i< N; i++) {
             
             int curHeight = arr.get(i).height;
-            int cnt = findMaxCnt(i, curHeight);
+            int curCnt = findMaxCnt(curHeight-1) + 1;
             
-            update(i+1, curHeight);
-            System.out.println(cnt);
+            update(curHeight, curCnt);
+            
+            long curVolume = curHeight * arr.get(i).width * arr.get(i).width;
+            
+            if(maxCnt < curCnt) {
+                maxCnt = curCnt;
+                volume = curVolume;
+            }
+            if(maxCnt == curCnt) {
+                volume = Math.min(curVolume, volume);
+            }
+            
         }
         
-        for(int i=1; i<= end; i++) {
-            System.out.print(tree[i] + " ");
-        }
-        System.out.println();
-        
+        bw.write(volume + " " + maxCnt);
         bw.flush();
     }
-    public static int findMaxCnt(int index, int height) { // height 보다 작은 상자 갯수 리턴 
+    public static int findMaxCnt(int height) { // height 보다 작은 상자 갯수 리턴 
         
         int s = start;
-        int e = start + index - 1;
-        int sCnt = 0, eCnt = 0;
+        int e = start + height - 1;
+     
+        int cnt = 0;
         
         while(s <= e) {
             
+            if(s % 2 != 0) {
+                cnt = Math.max(cnt, tree[s]);
+            }
             if(e % 2 == 0) {
-                if(tree[e] < height) {
-                    if(eCnt == 0) eCnt = 1;
-                    else eCnt *= 2;
-                }
+                cnt = Math.max(cnt, tree[e]);
             }
             
-            if(s % 2 != 0) {
-                if(tree[s] < height) {
-                    if(sCnt == 0) sCnt = 1;
-                    else sCnt *= 2;
-                }
-            }
-            System.out.println(">> "+s + " " + e +" " + sCnt + " " + eCnt);
             s = (s + 1) / 2;
             e = (e - 1) / 2;
         }
-        System.out.println(index +" " + height );
-        return sCnt + eCnt;
+        
+        return cnt;
     }
-    public static void update(int index, int height) {
+    public static void update(int index, int cnt) {
         int sdx = start + index - 1;
         
         while(sdx > 0) {
             
-            tree[sdx] = Math.max(height, tree[sdx]);
+            tree[sdx] = Math.max(cnt, tree[sdx]);
             sdx /= 2;
         }
         
