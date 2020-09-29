@@ -1,9 +1,14 @@
 package com.company.programmers;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class pro12907 {
     
     public static void main(String[] args) {
         // TODO Auto-generated method stub
+        HashMap<String, String> map = new HashMap<>();
+        ArrayList<Integer> arr = new ArrayList<>();
         
     }    
 }
