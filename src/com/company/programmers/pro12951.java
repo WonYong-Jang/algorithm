@@ -1,5 +1,7 @@
 package com.company.programmers;
 
+import java.util.LinkedList;
+
 public class pro12951 {
     
     public static void main(String[] args) {
