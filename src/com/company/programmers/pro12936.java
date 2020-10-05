@@ -1,10 +1,17 @@
 package com.company.programmers;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.PriorityQueue;
+
 public class pro12936 {
     
     public static void main(String[] args) {
         // TODO Auto-generated method stub
         
+        PriorityQueue<Integer> que = new PriorityQueue<>();
     }
 }
 

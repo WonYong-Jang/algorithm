@@ -5,60 +5,29 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class test2 {
     
-    static final long mod = 1000000007;
-    static int N;
+    
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringTokenizer st = new StringTokenizer(br.readLine());
         
-        int testCase = Integer.parseInt(st.nextToken());
-        
-        for(int k = 1; k <= testCase; k++) {
-            
-            st = new StringTokenizer(br.readLine());
-            N = Integer.parseInt(st.nextToken());
-            
-            Stack<Node> stack = new Stack<>();
-            long answer = 0;
-            
-            st = new StringTokenizer(br.readLine());
-            for(int i=1; i<= N; i++) {
-                
-                long target = Long.parseLong(st.nextToken());
-                
-                if(stack.isEmpty()) stack.add(new Node(target, i));
-                else {
-                   
-                    while(!stack.isEmpty()) {
-                        Node cur = stack.peek();
-                        
-                        if(cur.num > target) {
-                            answer = (answer + cur.index) % mod;
-                            break;
-                        }
-                        else stack.pop();
-                    }
-                    stack.add(new Node(target, i));
-                }
-            }
-            
-            bw.write("#"+k+" "+answer+"\n");
-        }
-        bw.flush();
+       ArrayList<String> arr = new ArrayList<>();
+       String str1 = "Aa";
+       String str2 = "aa";
+       System.out.println(str1.compareTo(str2));
+       arr.add("aa");
+       arr.add("Aa");
+       Collections.sort(arr);
+       for(int i=0; i < arr.size(); i++) {
+           System.out.println(arr.get(i));
+       }
+       
     }
-    static class Node {
-        int index;
-        long num;
-        Node(long a, int b) {
-            num = a; index = b;
-        }
-    }
+    
 }
 /**
 N <= 500000
@@ -88,7 +57,54 @@ class Node {
 7
  */
 
+/**
+import java.util.*;
 
+class Solution {
+    public long solution(int N, int K) {
+        long answer = 0;
+        
+        long end = 1, index = 0;
+        while(N > index) {
+            end *= 2;
+            index++;
+        }
+        
+        long start = 0; // 
+        
+        for(int i=0; i< K; i++) {
+            start += (1 << i);        
+        }
+        
+        while(true) {
+            if(start % 3 == 0) break;
+            start++;
+        }
+        
+        
+        while(start < end ) {
+            
+            int cnt = bitCount(start);
+            if(cnt == K) answer++;
+            
+            start += 3;
+        }
+        
+        return answer;
+    }
+    public int bitCount(long num) {
+        int cnt = 0;
+        
+        for(int i=0; i< 50; i++) {
+            if( (num & (1L << i)) > 0 ) {
+                cnt++; 
+            }
+        }
+        
+        return cnt;
+    }
+}
+ */
 
 
 
