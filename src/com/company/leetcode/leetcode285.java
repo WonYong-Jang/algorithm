@@ -1,11 +1,19 @@
 package com.company.leetcode;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 public class leetcode285 {
     
     public static void main(String[] args) {
         // TODO Auto-generated method stub
-        
-    }   
+        Map<Integer, Integer> map = new LinkedHashMap<Integer, Integer>() {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<Integer, Integer> eldest) {
+                return true;
+            }
+        };
+    }
 }
 /**
 /**
