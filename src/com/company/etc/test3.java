@@ -10,9 +10,9 @@ import java.util.StringTokenizer;
 public class test3 {
     
     static int N, answer;
-    static int[][] map;
-    static int[] visit;
-    static int[] data;
+    static int[][] map; // input
+    static int[] visit; // 숫자를 사용했는지 여부 
+    static int[] data; // 사용 숫자의 해당 위치에 있는 input 배열 값 저장 
     public static void main(String[] args) throws IOException {
         // TODO Auto-generated method stub
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -38,14 +38,14 @@ public class test3 {
                 }
             }
             
-            search(0, 0);
+            search(0);
             
             bw.write("#"+k+" "+answer+"\n");
         }
         bw.flush();
     }
-    public static void search(int cur, int size) {
-        
+    public static void search(int size) {  
+     // size: 2차원 input 배열에서 숫자 위치 row
         if(size == N) {
             
             int sum = 0;
@@ -61,7 +61,7 @@ public class test3 {
             if(visit[i] == 1) continue;
             visit[i] = 1;
             data[size] = map[size][i];
-            search(i, size+1);
+            search(size+1);
             
             visit[i] = 0;
         }
