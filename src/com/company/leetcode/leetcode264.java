@@ -7,6 +7,7 @@ public class leetcode264 {
     public static void main(String[] args) {
         // TODO Auto-generated method stub
         HashSet<Long> set = new HashSet<>();
+        StringBuilder sb = new StringBuilder();
         
     }   
 }
