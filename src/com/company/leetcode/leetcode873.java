@@ -1,9 +1,15 @@
 package com.company.leetcode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class leetcode873 {
     
     public static void main(String[] args) {
         // TODO Auto-generated method stub
+        List<Integer> list = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        String str = "abc";
         
     }
     
